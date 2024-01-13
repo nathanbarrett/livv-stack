@@ -1,0 +1,38 @@
+<script setup lang="ts">
+import { Head, usePage, router } from '@inertiajs/vue3'
+import { computed, ref } from 'vue';
+import TopNav from "@js/components/TopNav.vue";
+import SessionFlashMessages from "@js/components/SessionFlashMessages.vue";
+import LoginDialog from "@js/components/LoginDialog.vue";
+import ResetPasswordDialog from "@js/components/ResetPasswordDialog.vue";
+
+const appName = computed<string>(() => usePage().props.appName as string);
+const csrfToken = computed<string>(() => usePage().props.csrfToken as string);
+
+
+</script>
+
+<template>
+    <div>
+        <Head>
+            <meta name="csrf-token" :content="csrfToken" />
+            <link rel="icon" href="/favicon.png" type="image/png" />
+            <title>{{ appName }}</title>
+        </Head>
+        <v-app>
+            <TopNav />
+            <div class="app-body">
+                <slot />
+            </div>
+            <LoginDialog />
+            <ResetPasswordDialog />
+            <SessionFlashMessages />
+        </v-app>
+    </div>
+</template>
+
+<style lang="css" scoped>
+.app-body {
+    margin-top: 64px;
+}
+</style>

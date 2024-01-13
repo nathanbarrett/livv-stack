@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "lib": ["es2016", "dom"],
+        "esModuleInterop": true,
+        "baseUrl": ".",
+        "paths": {
+            "@js/*": ["resources/js/*"]
+        }
+    }
+}
