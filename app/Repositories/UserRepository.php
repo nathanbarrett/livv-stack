@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Repositories;
 
@@ -16,7 +18,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param array<string, mixed> $attributes
+     * @param  array<string, mixed>  $attributes
      */
     public function create(array $attributes): User
     {
@@ -54,13 +56,13 @@ class UserRepository extends BaseRepository
             ->orderBy('created_at', 'desc')
             ->first();
 
-        if (!$result) {
+        if (! $result) {
             return null;
         }
 
-        $tokenExpirationMinutes = (int)config('auth.passwords.users.expire');
+        $tokenExpirationMinutes = (int) config('auth.passwords.users.expire');
         if (
-            !$result->email ||
+            ! $result->email ||
             (
                 $tokenExpirationMinutes &&
                 Carbon::parse($result->created_at)->diffInMinutes(now()) > $tokenExpirationMinutes
@@ -69,6 +71,7 @@ class UserRepository extends BaseRepository
             DB::table('password_reset_tokens')
                 ->where('email', $result->email)
                 ->delete();
+
             return null;
         }
 
@@ -83,13 +86,13 @@ class UserRepository extends BaseRepository
             ->orderBy('created_at', 'desc')
             ->first();
 
-        if (!$result) {
+        if (! $result) {
             return null;
         }
 
-        $tokenExpirationSeconds = (int)config('auth.email_verification.token_expiration');
+        $tokenExpirationSeconds = (int) config('auth.email_verification.token_expiration');
         if (
-            !$result->token ||
+            ! $result->token ||
             (
                 $tokenExpirationSeconds &&
                 Carbon::parse($result->created_at)->diffInSeconds(now()) > $tokenExpirationSeconds
@@ -98,6 +101,7 @@ class UserRepository extends BaseRepository
             DB::table('email_verification_tokens')
                 ->where('email', $user->email)
                 ->delete();
+
             return null;
         }
 

@@ -14,7 +14,7 @@ use Prettus\Validator\Exceptions\ValidatorException;
 
 class AuthController extends Controller
 {
-    public function __construct(private readonly AuthService $auth,)
+    public function __construct(private readonly AuthService $auth)
     {
         //
     }
@@ -56,7 +56,7 @@ class AuthController extends Controller
             password: $request->input('password'),
         );
 
-        if (!$user) {
+        if (! $user) {
             return response()->json([
                 'message' => 'Unable to register user',
             ], 500);
@@ -73,7 +73,7 @@ class AuthController extends Controller
 
         $redirectRoute = config('auth.email_verification.redirect_to');
 
-        if (!$user) {
+        if (! $user) {
             return redirect()
                 ->to($redirectRoute)
                 ->with('error', 'Invalid token');
@@ -122,7 +122,7 @@ class AuthController extends Controller
             password: $request->input('password'),
         );
 
-        if (!$user) {
+        if (! $user) {
             return response('Invalid token', 401);
         }
 

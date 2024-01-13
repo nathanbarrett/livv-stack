@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Exceptions;
 
@@ -10,9 +12,9 @@ abstract class ContextException extends \Exception
     protected array $context = [];
 
     /**
-     * @param array<string, mixed> $context
+     * @param  array<string, mixed>  $context
      */
-    final public function __construct(string $message, int $code = 0, \Throwable $previous = null, array $context = [])
+    final public function __construct(string $message, int $code = 0, ?\Throwable $previous = null, array $context = [])
     {
         $this->context = $context;
 

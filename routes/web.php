@@ -16,7 +16,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-//    session()->now('success', 'LIVV Stack App Is Running!');
+    //    session()->now('success', 'LIVV Stack App Is Running!');
     return Inertia::render('Home');
 })->name('home');
 
@@ -41,6 +41,3 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/forgot-password', [AuthController::class, 'sendResetPasswordEmail'])
         ->name('auth.forgot-password');
 });
-
-
-

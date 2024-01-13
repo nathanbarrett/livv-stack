@@ -26,13 +26,13 @@ class UpdatePasswordRequest extends FormRequest
             'token' => [
                 'required',
                 'string',
-                Rule::exists('password_reset_tokens', 'token')
+                Rule::exists('password_reset_tokens', 'token'),
             ],
             'email' => [
                 'required',
                 'email',
                 Rule::exists('password_reset_tokens', 'email')
-                    ->where('token', $this->input('token'))
+                    ->where('token', $this->input('token')),
             ],
             'password' => [
                 'required',

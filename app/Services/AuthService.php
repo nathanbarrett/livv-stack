@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Services;
 
@@ -54,7 +56,6 @@ class AuthService
             throw AuthException::newUserCreationException($email, $e);
         }
 
-
         auth()->login($user);
         session()->regenerate();
 
@@ -76,15 +77,15 @@ class AuthService
             ->orderBy('created_at', 'desc')
             ->first();
 
-        if (!$result) {
+        if (! $result) {
             return null;
         }
 
-        $tokenExpirationSeconds = (int)config('auth.email_verification.token_expiration');
+        $tokenExpirationSeconds = (int) config('auth.email_verification.token_expiration');
         /** @var User|null $user */
         $user = $this->users->findByField('email', $result->email)->first();
         if (
-            !$user ||
+            ! $user ||
             (
                 $tokenExpirationSeconds &&
                 Carbon::parse($result->created_at)->diffInSeconds(now()) > $tokenExpirationSeconds
@@ -111,7 +112,7 @@ class AuthService
     {
         $user = $this->users->findByField('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 
@@ -131,7 +132,7 @@ class AuthService
     {
         $user = $this->users->getUserFromPasswordResetToken($token);
 
-        if (!$user || $user->email !== $email) {
+        if (! $user || $user->email !== $email) {
             return null;
         }
 
