@@ -12,14 +12,15 @@ LIVV is designed to be a starting point for building web applications with a mod
 - Laravel 10.x, PHP 8.3
 - Inertia.js for hybrid frontend
 - Vue 3 with TypeScript
-- Vuetify 3
-- Prettus Laravel Repositories for an abstraction layer between the database and the application
-- Auth scaffolding including login, registration, password reset, and email verification
+- Vuetify 3 using Material Design Icons
+- Prettus Laravel Repositories for an abstraction layer between Models and Services
+- Auth scaffolding (UI and backend) including login, registration, password reset, and email verification
 - IDE helpers ready to go. Update with `sail composer ide-helpers`
-- PHPStan ready to go `sail compoer analyse`
+- PHPStan ready to go `sail composer analyse`
 - PHPUnit tests for auth scaffolding `sail artisan test`
 - Laravel Pint for formatting: `sail composer format`
-- GitHub Action to run tests, check formatting, and analyze code on push to main or PR to main
+- ESLint for formatting and best practices: `npm run lint:fix`
+- GitHub Action to run PHPUnit tests, check back end code formatting, check front end code formatting, and analyze code on push to main or PR to main
 
 ## Installation
 
