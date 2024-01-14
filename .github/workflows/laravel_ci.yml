@@ -11,20 +11,15 @@ jobs:
   install-dependencies:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: test
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
 
       - name: Cache composer dependencies
         uses: actions/cache@v2
@@ -32,27 +27,12 @@ jobs:
           path: vendor
           key: composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            composer-
-
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
+            composer-cache
 
       - name: Install composer dependencies
         run: |
-          composer install --no-scripts
+          composer install --no-scripts --no-progress --prefer-dist --no-interaction
 
-      - name: Prepare Laravel Application
-        run: |
-          cp .env.ci .env
-          php artisan key:generate
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: laravel-project
-          path: .
   tests:
     runs-on: ubuntu-latest
     needs: install-dependencies
@@ -72,15 +52,22 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: laravel-project
-
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-cache
+
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts --no-progress --prefer-dist --no-interaction
 
       - name: Run tests
         run: |
@@ -95,15 +82,22 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: laravel-project
-
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-cache
+
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts --no-progress --prefer-dist --no-interaction
 
       - name: Run lint
         run: |
@@ -118,15 +112,22 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: laravel-project
-
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-cache
+
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts --no-progress --prefer-dist --no-interaction
 
       - name: Run analyse
         run: |
