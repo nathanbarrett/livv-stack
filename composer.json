@@ -5,7 +5,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.11",
         "laravel/framework": "^10.10",
@@ -45,7 +45,7 @@
             "@php artisan ide-helper:models -N"
         ],
         "lint": "vendor/bin/pint --test",
-        "lint-fix": "vendor/bin/pint -v",
+        "format": "vendor/bin/pint -v",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

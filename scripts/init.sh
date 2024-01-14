@@ -82,6 +82,7 @@ vendor/bin/sail composer install
 
 # Generate ide helper files
 echo "Generating ide helper files..."
+
 vendor/bin/sail composer ide-helpers
 
 printf "\n\n###################################################\n"
