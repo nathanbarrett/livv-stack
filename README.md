@@ -19,6 +19,7 @@ LIVV is designed to be a starting point for building web applications with a mod
 - PHPStan ready to go `sail compoer analyse`
 - PHPUnit tests for auth scaffolding `sail artisan test`
 - Laravel Pint for formatting: `sail composer format`
+- GitHub Action to run tests, check formatting, and analyze code on push to main or PR to main
 
 ## Installation
 
