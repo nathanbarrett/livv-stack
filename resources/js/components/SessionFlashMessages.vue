@@ -65,34 +65,42 @@ onMounted(() => {
 </script>
 
 <template>
-<div>
-    <v-snackbar v-model="showSuccess"
-                :color="flashData.success.color"
-                :timeout="flashData.success.timeout"
-                bottom
-                :multi-line="true">
-        {{ flashData.success.message }}
+  <div>
+    <v-snackbar
+      v-model="showSuccess"
+      :color="flashData.success.color"
+      :timeout="flashData.success.timeout"
+      bottom
+      :multi-line="true"
+    >
+      {{ flashData.success.message }}
     </v-snackbar>
-    <v-snackbar v-model="showWarning"
-                :color="flashData.warning.color"
-                :timeout="flashData.warning.timeout"
-                bottom
-                :multi-line="true">
-        {{ flashData.warning.message }}
+    <v-snackbar
+      v-model="showWarning"
+      :color="flashData.warning.color"
+      :timeout="flashData.warning.timeout"
+      bottom
+      :multi-line="true"
+    >
+      {{ flashData.warning.message }}
     </v-snackbar>
-    <v-snackbar v-model="showError"
-                :color="flashData.error.color"
-                :timeout="flashData.error.timeout"
-                bottom
-                :multi-line="true">
-        {{ flashData.error.message }}
+    <v-snackbar
+      v-model="showError"
+      :color="flashData.error.color"
+      :timeout="flashData.error.timeout"
+      bottom
+      :multi-line="true"
+    >
+      {{ flashData.error.message }}
     </v-snackbar>
-    <v-snackbar v-model="showInfo"
-                :color="flashData.info.color"
-                :timeout="flashData.info.timeout"
-                bottom
-                :multi-line="true">
-        {{ flashData.info.message }}
+    <v-snackbar
+      v-model="showInfo"
+      :color="flashData.info.color"
+      :timeout="flashData.info.timeout"
+      bottom
+      :multi-line="true"
+    >
+      {{ flashData.info.message }}
     </v-snackbar>
-</div>
+  </div>
 </template>

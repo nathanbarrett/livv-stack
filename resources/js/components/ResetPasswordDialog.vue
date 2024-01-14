@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
-import { User } from "@js/contracts/models";
 import { usePage, router } from "@inertiajs/vue3";
 import isEmail from "validator/es/lib/isEmail";
 import axios from "@js/common/axios";
 
 const openDialog = ref<boolean>(false);
-const user = computed<User|null>(() => usePage().props.auth.user);
 const resetPasswordToken = computed<string|null>(() => usePage().props.passwordResetToken as string);
 const resetPasswordEmail = computed<string|null>(() => usePage().props.passwordResetEmail as string);
 const newPassword = ref<string>("");
@@ -60,51 +58,67 @@ async function updatePassword() {
 </script>
 
 <template>
-<div>
-    <v-dialog v-model="openDialog" :persistent="true" width="400">
-        <v-card>
-            <v-card-title>
-                <span class="headline">Reset Password</span>
-            </v-card-title>
-            <v-card-text>
-                <v-form>
-                    <v-text-field
-                        v-model="newPassword"
-                        :rules="[v => !!v || 'Password is required', v => v.length >= 8 || 'Password must be at least 8 characters long']"
-                        label="New password"
-                        required
-                        type="password"
-                    ></v-text-field>
-                    <v-text-field
-                        v-model="newPasswordConfirmation"
-                        :rules="[v => !!v || 'Password confirmation is required', v => v === newPassword || 'Passwords do not match']"
-                        label="New password confirmation"
-                        required
-                        type="password"
-                    ></v-text-field>
-                </v-form>
-                <v-alert type="error" v-if="error">
-                    {{ error }}
-                </v-alert>
-            </v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn :disabled="updatingPassword"
-                       @click="openDialog = false">Cancel</v-btn>
-                <v-btn variant="elevated"
-                       color="primary"
-                       :disabled="updatingPassword || !formReady"
-                       :loading="updatingPassword"
-                       @click="updatePassword">
-                    Reset Password
-                </v-btn>
-            </v-card-actions>
-        </v-card>
+  <div>
+    <v-dialog
+      v-model="openDialog"
+      :persistent="true"
+      width="400"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="headline">Reset Password</span>
+        </v-card-title>
+        <v-card-text>
+          <v-form>
+            <v-text-field
+              v-model="newPassword"
+              :rules="[v => !!v || 'Password is required', v => v.length >= 8 || 'Password must be at least 8 characters long']"
+              label="New password"
+              required
+              type="password"
+            />
+            <v-text-field
+              v-model="newPasswordConfirmation"
+              :rules="[v => !!v || 'Password confirmation is required', v => v === newPassword || 'Passwords do not match']"
+              label="New password confirmation"
+              required
+              type="password"
+            />
+          </v-form>
+          <v-alert
+            v-if="error"
+            type="error"
+          >
+            {{ error }}
+          </v-alert>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :disabled="updatingPassword"
+            @click="openDialog = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            variant="elevated"
+            color="primary"
+            :disabled="updatingPassword || !formReady"
+            :loading="updatingPassword"
+            @click="updatePassword"
+          >
+            Reset Password
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
-    <v-snackbar v-model="passwordReset" color="success">
-        Password reset successfully. And you have been logged in.
+    <v-snackbar
+      v-model="passwordReset"
+      color="success"
+    >
+      Password reset successfully. And you have been logged in.
     </v-snackbar>
-</div>
+  </div>
 </template>
 
 <style scoped lang="css">

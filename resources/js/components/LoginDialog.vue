@@ -73,69 +73,95 @@ async function login(): Promise<void> {
 </script>
 
 <template>
-    <div>
-        <v-dialog activator="#loginButton" v-model="dialogOpen" width="400" @close="() => forgotPassword = false">
-            <v-card>
-                <v-card-title>
-                <span class="headline">
-                    {{ forgotPassword ? "Forgot Password" : "Login" }}
-                </span>
-                </v-card-title>
-                <v-card-text>
-                    <v-text-field
-                        ref="emailInput"
-                        autocomplete="username"
-                        v-model="email"
-                        :disabled="fetching"
-                        label="Email"
-                        prepend-inner-icon="mdi-account"
-                        type="email"
-                        required></v-text-field>
-                    <v-text-field
-                        v-if="!forgotPassword"
-                        v-model="password"
-                        autocomplete="password"
-                        @keyup.enter="login"
-                        :disabled="fetching"
-                        label="Password"
-                        prepend-inner-icon="mdi-lock"
-                        type="password"
-                        required></v-text-field>
-                    <v-alert type="error" v-if="error" class="mt-5" dismissible>
-                        {{ error }}
-                    </v-alert>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn size="x-small" @click="forgotPassword = !forgotPassword">
-                        {{ forgotPassword ? "Login" : "Forgot Password?" }}
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn @click="dialogOpen = false"
-                           :disabled="fetching">
-                        Cancel
-                    </v-btn>
-                    <v-btn v-if="forgotPassword"
-                           color="primary"
-                           variant="outlined"
-                           @click="sendForgotPasswordEmail"
-                           :disabled="fetching || !formReady"
-                           :loading="fetching">
-                        Reset Password
-                    </v-btn>
-                    <v-btn v-else
-                           color="primary"
-                           variant="outlined"
-                           @click="login"
-                           :disabled="fetching || !formReady"
-                           :loading="fetching">
-                        Login
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-        <v-snackbar v-model="resetPasswordEmailSent" color="success" bottom :multi-line="true">
-            If that email address is associated with an account, <br />
-            we've sent you an email with instructions on how to reset your password.
-        </v-snackbar>
-    </div>
+  <div>
+    <v-dialog
+      v-model="dialogOpen"
+      activator="#loginButton"
+      width="400"
+      @close="() => forgotPassword = false"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="headline">
+            {{ forgotPassword ? "Forgot Password" : "Login" }}
+          </span>
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+            ref="emailInput"
+            v-model="email"
+            autocomplete="username"
+            :disabled="fetching"
+            label="Email"
+            prepend-inner-icon="mdi-account"
+            type="email"
+            required
+          />
+          <v-text-field
+            v-if="!forgotPassword"
+            v-model="password"
+            autocomplete="password"
+            :disabled="fetching"
+            label="Password"
+            prepend-inner-icon="mdi-lock"
+            type="password"
+            required
+            @keyup.enter="login"
+          />
+          <v-alert
+            v-if="error"
+            type="error"
+            class="mt-5"
+            dismissible
+          >
+            {{ error }}
+          </v-alert>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            size="x-small"
+            @click="forgotPassword = !forgotPassword"
+          >
+            {{ forgotPassword ? "Login" : "Forgot Password?" }}
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            :disabled="fetching"
+            @click="dialogOpen = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            v-if="forgotPassword"
+            color="primary"
+            variant="outlined"
+            :disabled="fetching || !formReady"
+            :loading="fetching"
+            @click="sendForgotPasswordEmail"
+          >
+            Reset Password
+          </v-btn>
+          <v-btn
+            v-else
+            color="primary"
+            variant="outlined"
+            :disabled="fetching || !formReady"
+            :loading="fetching"
+            @click="login"
+          >
+            Login
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-snackbar
+      v-model="resetPasswordEmailSent"
+      color="success"
+      bottom
+      :multi-line="true"
+    >
+      If that email address is associated with an account, <br>
+      we've sent you an email with instructions on how to reset your password.
+    </v-snackbar>
+  </div>
 </template>

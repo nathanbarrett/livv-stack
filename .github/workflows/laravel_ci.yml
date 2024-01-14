@@ -8,34 +8,8 @@ on:
       - main
 
 jobs:
-  install-dependencies:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v2
-        with:
-          path: vendor
-          key: composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            composer-cache
-
-      - name: Install composer dependencies
-        run: |
-          composer install --no-scripts --no-progress --prefer-dist --no-interaction
-
   tests:
     runs-on: ubuntu-latest
-    needs: install-dependencies
 
     services:
       mysql:
@@ -80,9 +54,8 @@ jobs:
         run: |
           php artisan test
 
-  lint:
+  backend-lint:
     runs-on: ubuntu-latest
-    needs: install-dependencies
 
     steps:
       - uses: actions/checkout@v2
@@ -110,9 +83,8 @@ jobs:
         run: |
           composer lint
 
-  analyse:
+  backend-analyse:
     runs-on: ubuntu-latest
-    needs: install-dependencies
 
     steps:
       - uses: actions/checkout@v2
@@ -139,3 +111,32 @@ jobs:
       - name: Run analyse
         run: |
           composer analyse
+
+  frontend-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-cache
+
+      - name: Install npm dependencies
+        run: |
+          npm ci
+
+      - name: Run lint
+        run: |
+          npm run lint

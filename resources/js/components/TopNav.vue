@@ -16,23 +16,53 @@ function toggleTheme(): void {
 </script>
 
 <template>
-    <v-app-bar color="primary">
-        <v-app-bar-nav-icon icon="mdi-menu" id="appBarIcon"></v-app-bar-nav-icon>
-        <v-menu activator="#appBarIcon" :close-on-content-click="false">
-            <v-list>
-                <v-list-item @click="toggleTheme" prepend-icon="mdi-theme-light-dark">
-                    Switch to {{ isDarkTheme ? "light" : "dark" }} theme
-                </v-list-item>
-                <v-list-item>Go to about</v-list-item>
-                <v-list-item>Go to contact</v-list-item>
-            </v-list>
-        </v-menu>
-        <v-app-bar-title>{{ appName }}</v-app-bar-title>
-        <v-spacer></v-spacer>
-        <v-btn v-if="!user" variant="outlined" size="small" @click="router.visit('/register')">Register</v-btn>
-        <v-btn v-if="!user" variant="plain" size="small" id="loginButton">Login</v-btn>
-        <v-btn v-if="user" variant="plain" size="small" href="/logout">Logout</v-btn>
-    </v-app-bar>
+  <v-app-bar color="primary">
+    <v-app-bar-nav-icon
+      id="appBarIcon"
+      icon="mdi-menu"
+    />
+    <v-menu
+      activator="#appBarIcon"
+      :close-on-content-click="false"
+    >
+      <v-list>
+        <v-list-item
+          prepend-icon="mdi-theme-light-dark"
+          @click="toggleTheme"
+        >
+          Switch to {{ isDarkTheme ? "light" : "dark" }} theme
+        </v-list-item>
+        <v-list-item>Go to about</v-list-item>
+        <v-list-item>Go to contact</v-list-item>
+      </v-list>
+    </v-menu>
+    <v-app-bar-title>{{ appName }}</v-app-bar-title>
+    <v-spacer />
+    <v-btn
+      v-if="!user"
+      variant="outlined"
+      size="small"
+      @click="router.visit('/register')"
+    >
+      Register
+    </v-btn>
+    <v-btn
+      v-if="!user"
+      id="loginButton"
+      variant="plain"
+      size="small"
+    >
+      Login
+    </v-btn>
+    <v-btn
+      v-if="user"
+      variant="plain"
+      size="small"
+      href="/logout"
+    >
+      Logout
+    </v-btn>
+  </v-app-bar>
 </template>
 
 <style scoped lang="css">

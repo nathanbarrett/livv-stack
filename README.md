@@ -9,7 +9,7 @@ LIVV is designed to be a starting point for building web applications with a mod
 
 ## Features
 
-- Laravel 10.x
+- Laravel 10.x, PHP 8.3
 - Inertia.js for hybrid frontend
 - Vue 3 with TypeScript
 - Vuetify 3
@@ -29,6 +29,11 @@ LIVV is designed to be a starting point for building web applications with a mod
 4. Run `npm run dev`
 
 You can re-run init.sh at any time to reset the project.
+
+## Vuetify Themes
+
+A default light and dark theme is included
+but feel free to add or update to make it your own in `resources/js/vuetify/available-themes.ts`
 
 ## License
 

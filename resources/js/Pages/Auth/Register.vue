@@ -59,86 +59,98 @@ async function register(): Promise<void> {
 </script>
 
 <template>
-    <Layout>
-        <v-container>
-            <v-row justify="center" align="center">
-                <v-col cols="12" md="8" lg="6" xl="4">
-                  <v-form v-model="formValid" validate-on="blur" @submit.prevent="register">
-                    <v-card class="mt-10">
-                      <v-card-title>
-                        <span class="headline">
-                          Register for an account
-                        </span>
-                      </v-card-title>
-                      <v-card-text>
-                          <v-text-field
-                              v-model="name"
-                              required
-                              :rules="nameRules"
-                              :disabled="registering"
-                              label="Name"
-                              prepend-inner-icon="mdi-account"
-                              type="text"
-                              autocomplete="name"
-                              class="mt-3"
-                          />
-                          <v-text-field
-                              v-model="email"
-                              required
-                              :rules="emailRules"
-                              :disabled="registering"
-                              label="Email"
-                              prepend-inner-icon="mdi-email"
-                              type="email"
-                              autocomplete="username"
-                              class="mt-3"
-                          />
-                          <v-text-field
-                              v-model="password"
-                              required
-                              :disabled="registering"
-                              :rules="passwordRules"
-                              label="Password"
-                              prepend-inner-icon="mdi-lock"
-                              type="password"
-                              autocomplete="new-password"
-                              class="mt-3"
-                          />
-                          <v-text-field
-                              v-model="passwordConfirmation"
-                              :disabled="registering"
-                              label="Confirm Password"
-                              prepend-inner-icon="mdi-lock"
-                              type="password"
-                              autocomplete="new-password"
-                              :rules="passwordConfirmationRules"
-                              class="mt-3"
-                          />
-                          <v-alert
-                              v-if="registrationError"
-                              type="error"
-                              closeable
-                              class="mt-3"
-                          >
-                              {{ registrationError }}
-                          </v-alert>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            variant="flat"
-                            :disabled="!formValid || registering"
-                            color="primary"
-                            :loading="registering"
-                            type="submit"
-                        >
-                          Register
-                        </v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-form>
-                </v-col>
-            </v-row>
-        </v-container>
-    </Layout>
+  <Layout>
+    <v-container>
+      <v-row
+        justify="center"
+        align="center"
+      >
+        <v-col
+          cols="12"
+          md="8"
+          lg="6"
+          xl="4"
+        >
+          <v-form
+            v-model="formValid"
+            validate-on="blur"
+            @submit.prevent="register"
+          >
+            <v-card class="mt-10">
+              <v-card-title>
+                <span class="headline">
+                  Register for an account
+                </span>
+              </v-card-title>
+              <v-card-text>
+                <v-text-field
+                  v-model="name"
+                  required
+                  :rules="nameRules"
+                  :disabled="registering"
+                  label="Name"
+                  prepend-inner-icon="mdi-account"
+                  type="text"
+                  autocomplete="name"
+                  class="mt-3"
+                />
+                <v-text-field
+                  v-model="email"
+                  required
+                  :rules="emailRules"
+                  :disabled="registering"
+                  label="Email"
+                  prepend-inner-icon="mdi-email"
+                  type="email"
+                  autocomplete="username"
+                  class="mt-3"
+                />
+                <v-text-field
+                  v-model="password"
+                  required
+                  :disabled="registering"
+                  :rules="passwordRules"
+                  label="Password"
+                  prepend-inner-icon="mdi-lock"
+                  type="password"
+                  autocomplete="new-password"
+                  class="mt-3"
+                />
+                <v-text-field
+                  v-model="passwordConfirmation"
+                  :disabled="registering"
+                  label="Confirm Password"
+                  prepend-inner-icon="mdi-lock"
+                  type="password"
+                  autocomplete="new-password"
+                  :rules="passwordConfirmationRules"
+                  class="mt-3"
+                />
+                <v-alert
+                  v-if="registrationError"
+                  type="error"
+                  closeable
+                  class="mt-3"
+                >
+                  {{ registrationError }}
+                </v-alert>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer />
+                <v-btn
+                  variant="flat"
+                  :disabled="!formValid || registering"
+                  color="primary"
+                  :loading="registering"
+                  type="submit"
+                >
+                  Register
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-form>
+        </v-col>
+      </v-row>
+    </v-container>
+  </Layout>
 </template>
