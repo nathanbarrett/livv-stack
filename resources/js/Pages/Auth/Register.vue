@@ -42,7 +42,7 @@ async function register(): Promise<void> {
   registering.value = true;
     registrationError.value = "";
   try {
-      await axios.post<any, AxiosResponse<RegisterResponseData>, RegisterRequestData>("/register", {
+      await axios.post<unknown, AxiosResponse<RegisterResponseData>, RegisterRequestData>("/register", {
           name: name.value,
           email: email.value,
           password: password.value,
