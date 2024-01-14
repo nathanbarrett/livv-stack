@@ -41,7 +41,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_DATABASE: test
+          MYSQL_DATABASE: testing
           MYSQL_USER: test
           MYSQL_PASSWORD: password
           MYSQL_ROOT_PASSWORD: password
