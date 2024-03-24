@@ -8,30 +8,9 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Prettus\Repository\Eloquent\BaseRepository;
 
-class UserRepository extends BaseRepository
+class UserRepository
 {
-    public function model(): string
-    {
-        return User::class;
-    }
-
-    /**
-     * @param  array<string, mixed>  $attributes
-     */
-    public function create(array $attributes): User
-    {
-        /** @var User $user */
-        $user = parent::create($attributes);
-
-        if (config('auth.email_verification.enabled')) {
-            $this->createEmailVerificationToken($user);
-        }
-
-        return $user;
-    }
-
     public function createPasswordResetToken(User $user): string
     {
         $token = Str::random(32);
@@ -108,7 +87,7 @@ class UserRepository extends BaseRepository
         return $result->token;
     }
 
-    private function createEmailVerificationToken(User $user): void
+    public function createEmailVerificationToken(User $user): void
     {
         DB::table('email_verification_tokens')->updateOrInsert(
             [

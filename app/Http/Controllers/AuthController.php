@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\AuthException;
 use App\Http\Requests\AuthRegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SendPasswordResetEmailRequest;
@@ -10,7 +11,6 @@ use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
-use Prettus\Validator\Exceptions\ValidatorException;
 
 class AuthController extends Controller
 {
@@ -46,7 +46,7 @@ class AuthController extends Controller
     }
 
     /**
-     * @throws ValidatorException
+     * @throws AuthException
      */
     public function register(AuthRegisterRequest $request): JsonResponse
     {

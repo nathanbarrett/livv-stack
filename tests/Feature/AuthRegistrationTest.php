@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Mail\VerifyEmail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
@@ -17,6 +18,7 @@ class AuthRegistrationTest extends TestCase
 
     /**
      * @test
+     * @group testing
      */
     public function it_should_register_a_user_with_valid_data(): void
     {
@@ -122,11 +124,12 @@ class AuthRegistrationTest extends TestCase
 
         $user = $nonPersisted ?? User::factory()->make();
 
-        $this->postJson(route('auth.register'), [
+        $response = $this->postJson(route('auth.register'), [
             'name' => $user->name,
             'email' => $user->email,
             'password' => 'password',
         ]);
+        $response->assertStatus(Response::HTTP_CREATED);
 
         return User::query()
             ->where('email', $user->email)

@@ -47,7 +47,7 @@ class AuthService
     public function register(string $name, string $email, string $password): ?User
     {
         try {
-            $user = $this->users->create([
+            $user = User::create([
                 'name' => $name,
                 'email' => $email,
                 'password' => bcrypt($password),
@@ -83,7 +83,7 @@ class AuthService
 
         $tokenExpirationSeconds = (int) config('auth.email_verification.token_expiration');
         /** @var User|null $user */
-        $user = $this->users->findByField('email', $result->email)->first();
+        $user = User::firstWhere('email', $result->email);
         if (
             ! $user ||
             (
@@ -110,7 +110,7 @@ class AuthService
 
     public function sendPasswordResetEmail(string $email): bool
     {
-        $user = $this->users->findByField('email', $email)->first();
+        $user = User::firstWhere('email', $email);
 
         if (! $user) {
             return false;

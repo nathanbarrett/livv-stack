@@ -74,7 +74,7 @@ fi
 # Run migrations
 echo "Running migrations..."
 sleep 10
-vendor/bin/sail artisan migrate
+vendor/bin/sail artisan migrate:fresh
 
 # Re-run composer install do to post-install scripts
 echo "Re-running composer install..."
