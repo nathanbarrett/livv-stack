@@ -18,7 +18,6 @@ class AuthRegistrationTest extends TestCase
 
     /**
      * @test
-     * @group testing
      */
     public function it_should_register_a_user_with_valid_data(): void
     {
