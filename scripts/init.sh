@@ -54,6 +54,31 @@ else
     fi
 fi
 
+# If .git is still pointing to livv-stack, remove it and reinitialize git
+if [ -d ".git" ]; then
+    git_url=$(git config --get remote.origin.url)
+    repo_name=$(basename -s .git "$git_url")
+
+    # Check if the repository name matches
+    if [ "$repo_name" = "livv-stack" ]; then
+        echo "Deleting livv-stack .git directory..."
+        rm -rf .git
+
+        echo "Reinitializing git repository..."
+        git init
+
+        git add .
+        git commit -m "Initial commit"
+    fi
+else
+    echo "No .git directory found. Initializing git repository..."
+    git init
+
+    git add .
+    git commit -m "Initial commit"
+fi
+
+
 
 # Install composer dependencies
 echo "Installing composer dependencies..."
