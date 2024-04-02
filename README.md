@@ -31,6 +31,9 @@ LIVV is designed to be a starting point for building web applications with a mod
 
 You can re-run init.sh at any time to reset the project.
 
+## Github Actions
+Rename `.github/workflows/laravel_ci.yml.disabled` to `.github/workflows/laravel_ci.yml` to enable the GitHub Action.
+
 ## Vuetify Themes
 
 A default light and dark theme is included

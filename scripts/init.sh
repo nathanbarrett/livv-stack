@@ -69,6 +69,13 @@ if [ -d ".git" ]; then
 
         git add .
         git commit -m "Initial commit"
+
+        # If this occurs then likely its the first time the script is being run
+        # Move the github workflow yaml file to a disabled location
+        if [ -f ".github/workflows/laravel_ci.yml" ]; then
+            echo "Disabling github workflow..."
+            mv .github/workflows/laravel_ci.yml .github/workflows/laravel_ci.yml.disabled
+        fi
     fi
 else
     echo "No .git directory found. Initializing git repository..."
