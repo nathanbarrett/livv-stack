@@ -87,10 +87,6 @@ echo "Generating ide helper files..."
 
 vendor/bin/sail composer ide-helpers
 
-echo "Installing npm packages..."
-
-vendor/bin/sail npm install
-
 # If .git is still pointing to livv-stack, remove it and reinitialize git
 if [ -d ".git" ]; then
     git_url=$(git config --get remote.origin.url)
@@ -124,5 +120,6 @@ fi
 
 printf "\n\n###################################################\n"
 echo "##            You're all set!                    ##"
+echo "##           Run 'npm install'                   ##"
 echo "##    Run 'npm run dev' and visit localhost      ##"
 printf "###################################################\n\n"
