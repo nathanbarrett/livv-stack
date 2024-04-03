@@ -54,6 +54,43 @@ else
     fi
 fi
 
+
+# Install composer dependencies
+echo "Installing composer dependencies..."
+docker run --rm --interactive --tty --name tmp-composer-install --volume $PWD:/app composer install --ignore-platform-reqs --no-scripts
+
+# Run containers
+echo "Building and running containers..."
+docker compose down -v
+vendor/bin/sail build --no-cache
+vendor/bin/sail up -d
+
+# Generate application key, if it doesn't exist
+if grep -q "^APP_KEY=$" .env; then
+    echo "APP_KEY is not set. Generating a new APP_KEY..."
+    vendor/bin/sail artisan key:generate
+else
+    echo "APP_KEY is already set."
+fi
+
+# Run migrations
+echo "Running migrations..."
+sleep 10
+vendor/bin/sail artisan migrate:fresh
+
+# Re-run composer install do to post-install scripts
+echo "Re-running composer install..."
+vendor/bin/sail composer install
+
+# Generate ide helper files
+echo "Generating ide helper files..."
+
+vendor/bin/sail composer ide-helpers
+
+echo "Installing npm packages..."
+
+vendor/bin/sail npm install
+
 # If .git is still pointing to livv-stack, remove it and reinitialize git
 if [ -d ".git" ]; then
     git_url=$(git config --get remote.origin.url)
@@ -85,41 +122,7 @@ else
     git commit -m "Initial commit"
 fi
 
-
-
-# Install composer dependencies
-echo "Installing composer dependencies..."
-docker run --rm --interactive --tty --name tmp-composer-install --volume $PWD:/app composer install --ignore-platform-reqs --no-scripts
-
-# Run sail up
-echo "Running sail up..."
-vendor/bin/sail up -d --build
-
-# Generate application key, if it doesn't exist
-if grep -q "^APP_KEY=$" .env; then
-    echo "APP_KEY is not set. Generating a new APP_KEY..."
-    vendor/bin/sail artisan key:generate
-else
-    echo "APP_KEY is already set."
-fi
-
-# Run migrations
-echo "Running migrations..."
-sleep 10
-vendor/bin/sail artisan migrate:fresh
-
-# Re-run composer install do to post-install scripts
-echo "Re-running composer install..."
-vendor/bin/sail composer install
-
-# Generate ide helper files
-echo "Generating ide helper files..."
-
-vendor/bin/sail composer ide-helpers
-
 printf "\n\n###################################################\n"
-echo "##         You're all set!                       ##"
-echo "##         Last steps are:                       ##"
-echo "##         1. Install npm packages               ##"
-echo "##         2. Run 'npm run dev'                  ##"
+echo "##            You're all set!                    ##"
+echo "##    Run 'npm run dev' and visit localhost      ##"
 printf "###################################################\n\n"

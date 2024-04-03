@@ -26,8 +26,16 @@ LIVV is designed to be a starting point for building web applications with a mod
 
 1. Install [Docker](https://www.docker.com/get-started)
 2. Run `bash scripts/init.sh`
-3. Install npm dependencies
-4. Run `npm run dev`
+3. Run `npm run dev`
+4. Visit http://localhost
+
+OR (faster way)
+
+1. Install [Docker](https://www.docker.com/get-started)
+2. Go to your projects directory and run 👇 (replace `my-app` with your desired project name)
+```shell
+APP_NAME=my-app && git clone git@github.com:nathanbarrett/livv-stack.git $APP_NAME && cd $APP_NAME && bash scripts/init.sh
+```
 
 You can re-run init.sh at any time to reset the project.
 
