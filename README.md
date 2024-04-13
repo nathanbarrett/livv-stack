@@ -13,7 +13,9 @@ LIVV is designed to be a starting point for building web applications with a mod
 - Inertia.js for hybrid frontend
 - Vue 3 with TypeScript
 - Vuetify 3 using Material Design Icons
-- Built in front end form validation and snackbars (toasts)
+- Built in front end form validation
+- Helper functions for quick messages (toast) to your users
+- Helper function for quick confirmation dialogs
 - Repositories for an abstraction layer between Models and Services
 - Auth scaffolding (UI and backend) including login, registration, password reset, and email verification
 - IDE helpers ready to go. Update with `sail composer ide-helpers`
