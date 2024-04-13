@@ -5,6 +5,7 @@ import TopNav from "@js/components/TopNav.vue";
 import SessionFlashMessages from "@js/components/SessionFlashMessages.vue";
 import LoginDialog from "@js/components/LoginDialog.vue";
 import ResetPasswordDialog from "@js/components/ResetPasswordDialog.vue";
+import GlobalSnackbar from "@js/components/GlobalSnackbar.vue";
 
 const appName = computed<string>(() => usePage().props.appName as string);
 const csrfToken = computed<string>(() => usePage().props.csrfToken as string);
@@ -34,6 +35,7 @@ const csrfToken = computed<string>(() => usePage().props.csrfToken as string);
       <LoginDialog />
       <ResetPasswordDialog />
       <SessionFlashMessages />
+      <GlobalSnackbar />
     </v-app>
   </div>
 </template>
