@@ -40,7 +40,7 @@ OR (faster way)
 APP_NAME=my-app && git clone git@github.com:nathanbarrett/livv-stack.git $APP_NAME && cd $APP_NAME && bash scripts/init.sh
 ```
 
-You can re-run init.sh at any time to reset the project.
+You can re-run init.sh at any time to rebuild the project.
 
 ## Github Actions
 Rename `.github/workflows/laravel_ci.yml.disabled` to `.github/workflows/laravel_ci.yml` to enable the GitHub Action.

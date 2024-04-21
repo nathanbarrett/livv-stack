@@ -8,9 +8,15 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use NathanBarrett\LaravelRepositories\Repository;
 
-class UserRepository
+class UserRepository extends Repository
 {
+    public function modelClass(): string
+    {
+        return User::class;
+    }
+
     public function createPasswordResetToken(User $user): string
     {
         $token = Str::random(32);
