@@ -6,9 +6,13 @@
   <v-row>
     <v-col
       cols="12"
-      class="d-flex justify-center"
+      class="d-flex flex-column align-center justify-center mt-10"
     >
-      <h2>Available Components</h2>
+        <h2>Current Theme Colors</h2>
+        <div class="text-subtitle-2 mt-6 text-center">
+            Toggle between light and dark mode in the top left nav menu.<br />
+            Adjust colors in the <code>resources/js/vuetify/available-themes.ts</code> file or make your own themes.
+        </div>
     </v-col>
     <v-col cols="12">
       <v-row justify="center">

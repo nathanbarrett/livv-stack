@@ -1,13 +1,17 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DemoController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     //    session()->now('success', 'LIVV Stack App Is Running!');
-    return Inertia::render('Home');
+    return Inertia::render('HomeDemo');
 })->name('home');
+
+Route::get('/demo/redirect-with-flash-info', [DemoController::class, 'redirectWithFlashInfo'])
+    ->name('demo.redirect-with-flash-info');
 
 Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])
     ->name('auth.verify-email');

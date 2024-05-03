@@ -2,6 +2,7 @@
 import { computed, ref, onMounted } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import { ServerFlashMessage, ServerFlashMessages, FlashMessageConfig } from "@js/contracts/session-flash-messages";
+import { SnackbarLocation } from "@js/common/snackbar";
 
 interface FlashMessages {
     success: FlashMessageConfig;
@@ -11,6 +12,8 @@ interface FlashMessages {
 }
 
 const defaultTimeout = 5000;
+const defaultLocation = ref<SnackbarLocation>("bottom center");
+
 const successFallbackColor = "success";
 const warningFallbackColor = "warning";
 const errorFallbackColor = "error";
@@ -79,7 +82,7 @@ onMounted(() => {
       v-model="showWarning"
       :color="flashData.warning.color"
       :timeout="flashData.warning.timeout"
-      bottom
+      :location="defaultLocation"
       :multi-line="true"
     >
       {{ flashData.warning.message }}
@@ -88,7 +91,7 @@ onMounted(() => {
       v-model="showError"
       :color="flashData.error.color"
       :timeout="flashData.error.timeout"
-      bottom
+      :location="defaultLocation"
       :multi-line="true"
     >
       {{ flashData.error.message }}
@@ -97,7 +100,7 @@ onMounted(() => {
       v-model="showInfo"
       :color="flashData.info.color"
       :timeout="flashData.info.timeout"
-      bottom
+      :location="defaultLocation"
       :multi-line="true"
     >
       {{ flashData.info.message }}

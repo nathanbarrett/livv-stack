@@ -7,7 +7,7 @@ import { snackbarStore } from "@js/common/snackbar";
   <v-snackbar
     v-model="snackbarStore.show"
     :color="snackbarStore.color"
-    bottom
+    :location="snackbarStore.location"
     :multi-line="true"
   >
     {{ snackbarStore.message }}

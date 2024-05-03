@@ -22,14 +22,14 @@ import { confirmStore } from "@js/common/confirm";
         <v-spacer />
         <v-btn
           variant="outlined"
-          color="default"
+          :color="confirmStore.cancelButtonColor || 'default'"
           @click="confirmStore.cancel()"
         >
           {{ confirmStore.cancelButtonText || 'Cancel' }}
         </v-btn>
         <v-btn
           variant="outlined"
-          color="info"
+          :color="confirmStore.confirmButtonColor || 'info'"
           @click="confirmStore.confirm()"
         >
           {{ confirmStore.confirmButtonText || 'OK' }}

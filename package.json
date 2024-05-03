@@ -19,11 +19,11 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "@inertiajs/vue3": "^1.0.15",
+        "@inertiajs/vue3": "^1.0.16",
         "@mdi/font": "^7.4.47",
         "axios": "^1.6.8",
         "validator": "^13.11.0",
-        "vue": "^3.4.21",
-        "vuetify": "^3.5.11"
+        "vue": "^3.4.26",
+        "vuetify": "^3.6.3"
     }
 }
