@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -15,6 +17,6 @@ class DemoController extends Controller
             return redirect()->route('home')->with('error', 'Invalid flash message type');
         }
 
-        return redirect()->route('home')->with($type, 'This is a ' . $type . ' message from the server!');
+        return redirect()->route('home')->with($type, 'This is a '.$type.' message from the server!');
     }
 }

@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use NathanBarrett\LaravelRepositories\Repository;
 
+/**
+ * @extends Repository<User>
+ */
 class UserRepository extends Repository
 {
     public function modelClass(): string

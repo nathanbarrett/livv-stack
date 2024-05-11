@@ -1,6 +1,9 @@
 import { ThemeDefinition } from "vuetify";
-import colors from 'vuetify/util/colors';
+import colors from 'vuetify/util/colors'; // https://vuetifyjs.com/en/styles/colors/#material-colors
 
+/**
+ * @see https://vuetifyjs.com/en/features/theme/
+ */
 export const LivvDarkTheme: ThemeDefinition = {
     dark: true,
     colors: {
