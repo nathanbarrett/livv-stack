@@ -4,6 +4,7 @@
     pkgs.nodejs_20
     pkgs.php83Packages.composer
     pkgs.php83
+    pkgs.mysql80
   ];
   idx.extensions = [
     "vue.volar"
