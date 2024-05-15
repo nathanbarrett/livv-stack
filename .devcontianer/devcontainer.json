@@ -23,7 +23,7 @@
         }
     },
     "remoteUser": "sail",
-    "postCreateCommand": "chown -R 1000:1000 /var/www/html && composer install && php artisan key:generate && echo \"ASSET_URL=https://${CODESPACE_NAME}-80.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}\" >> .env",
+    "postCreateCommand": "cp .env.example .env && chown -R 1000:1000 /var/www/html && composer install && npm install && php artisan key:generate && echo \"ASSET_URL=https://${CODESPACE_NAME}-80.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}\" >> .env",
     "postStartCommand": "php artisan migrate --seed",
     "forwardPorts": [80, 5173, 3306, 8025],
     "portsAttributes": {

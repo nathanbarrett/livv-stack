@@ -109,6 +109,8 @@ if [ -d ".git" ]; then
             echo "Disabling github workflow..."
             mv .github/workflows/laravel_ci.yml .github/workflows/laravel_ci.yml.disabled
         fi
+    else
+        echo "Repository name does not match livv-stack. Skipping git reinitialization..."
     fi
 else
     echo "No .git directory found. Initializing git repository..."
@@ -118,8 +120,15 @@ else
     git commit -m "Initial commit"
 fi
 
+# Install npm dependencies
+echo "Installing npm dependencies..."
+npm install
+
+# Run asset watcher
 printf "\n\n###################################################\n"
 echo "##            You're all set!                    ##"
-echo "##           Run 'npm install'                   ##"
-echo "##    Run 'npm run dev' and visit localhost      ##"
+echo "##    Go visit 'localhost' in your browser       ##"
 printf "###################################################\n\n"
+npm run dev
+
+
