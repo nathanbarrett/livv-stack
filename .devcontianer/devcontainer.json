@@ -21,14 +21,36 @@
     "remoteUser": "sail",
     "postCreateCommand": "chown -R 1000:1000 /var/www/html && composer install && php artisan key:generate && echo \"ASSET_URL=https://${CODESPACE_NAME}-80.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}\" >> .env",
     "postStartCommand": "php artisan migrate --seed",
-    "forwardPorts": [80],
+    "forwardPorts": [80, 5173, 3306, 8025],
+    "portsAttributes": {
+        "80": {
+            "label": "Inertia.js",
+            "description": "Inertia.js compiled assets",
+        },
+        "5173": {
+            "label": "Vite",
+            "description": "Laravel web app back end",
+        },
+        "3306": {
+            "label": "MySQL",
+            "description": "MySQL database",
+        },
+        "8025": {
+            "label": "Mailhog",
+            "description": "Mailhog SMTP server",
+        }
+    },
     "runServices": [
+        "msql",
+        "redis",
+        "mailhog",
+        "laravel.test",
         {
             "name": "npm-run-dev",
             "service": "laravel.test",
             "command": "npm run dev",
             "autoForwardPorts": true
-        }
+        },
     ],
     // "shutdownAction": "none",
 }
