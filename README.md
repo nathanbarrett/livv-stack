@@ -11,7 +11,7 @@ LIVV is designed to be a starting point for building web applications with a mod
 
 - Laravel 11.x, PHP 8.3
 - Inertia.js for hybrid frontend
-- Vue 3 with TypeScript
+- Vue ^3.5 with TypeScript
 - Vuetify 3 using Material Design Icons
 - Built in front end form validation
 - Helper functions for quick messages (toast) to your users
@@ -27,24 +27,25 @@ LIVV is designed to be a starting point for building web applications with a mod
 
 ## Installation
 
-Prerequisits:
+Prerequisites:
 - [Docker](https://www.docker.com/get-started)
 - [Node >=v20](https://nodejs.org/en/download)
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
-### Easiest way if you are using GitHub
+### Three ways to install:
+
+### 1. Easiest way if you are using GitHub
 - Click on `Use this template` button in the top right and create your own repo from this file structure
 - Clone your new repository locally
 - run `bash scripts/init.sh`
 
-### Or install with Git
+### 2. Installation with Git
 1. Run `git clone git@github.com:nathanbarrett/livv-stack.git my-app` (replace my-app)
 2. `cd my-app`
-3. `bash scripts/init.sh`
+3. `bash scripts/init.sh` - script will detect that you cloned and turn it into your own repo
 4. Visit http://localhost
 
-OR (faster way)
-
+### 3. Faster Installation with Git
 Go to your projects directory and run 👇 (replace `my-app` with your desired project name)
 ```shell
 APP_NAME=my-app && git clone git@github.com:nathanbarrett/livv-stack.git $APP_NAME && cd $APP_NAME && bash scripts/init.sh
@@ -52,11 +53,10 @@ APP_NAME=my-app && git clone git@github.com:nathanbarrett/livv-stack.git $APP_NA
 
 You can re-run init.sh at any time to rebuild the project.
 
-## Github Actions
-Rename `.github/workflows/laravel_ci.yml.disabled` to `.github/workflows/laravel_ci.yml` to enable the GitHub Action.
+### GitHub Actions
+Rename `.github/workflows/laravel_ci.yml` to `.github/workflows/laravel_ci.yml.disabled` to disable the GitHub Action.
 
-## Vuetify Themes
-
+### Vuetify Themes
 A default light and dark theme is included
 but feel free to add or update to make it your own in `resources/js/vuetify/available-themes.ts`
 

@@ -38,7 +38,7 @@ const user = computed<User|null>(() => usePage().props.auth.user);
             </v-col>
             <v-col cols="12" md="6">
                 <SnackbarDemo />
-                <SessionFlashNotificationsDemo class="mt-10" />
+                <SessionFlashNotificationsDemo class="mt-6" />
             </v-col>
             <v-col cols="12" md="6">
                 <ConfirmDialogDemo />

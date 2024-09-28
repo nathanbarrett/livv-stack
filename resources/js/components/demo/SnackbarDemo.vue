@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-// Just pull these 👇 in anywhere you need them
+// Use these 👇    👇    👇      👇  anywhere you need them
 import { success, info, error, warning, SnackbarLocation, GlobalSnackbarOptions } from "@js/common/snackbar";
 
 const message = ref<string>('Hey there! Check out this notification!');
