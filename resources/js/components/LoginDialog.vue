@@ -3,7 +3,7 @@ import { watch, ref, computed } from "vue";
 import axios from "@js/common/axios";
 import isEmail from "validator/es/lib/isEmail";
 
-const props = defineProps<{
+const { open } = defineProps<{
     open?: boolean
 }>();
 
@@ -22,10 +22,13 @@ const formReady = computed<boolean>(() => {
         )
 });
 
+watch(() => open, (_open) => {
+    dialogOpen.value = !!_open;
+});
+
 // autofocus the email field when the dialog opens
-watch(() => props.open, (open) => {
-    if (open && !dialogOpen.value) {
-        dialogOpen.value = true;
+watch(dialogOpen, (open) => {
+    if (dialogOpen.value) {
         setTimeout(() => {
             // focus the email field
             emailInput.value?.focus();

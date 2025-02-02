@@ -1,3 +1,4 @@
+import {SnackbarLocation} from "@js/common/snackbar";
 
 export interface FlashMessageConfig {
     message: string;
@@ -12,4 +13,5 @@ export interface ServerFlashMessages {
     warning: ServerFlashMessage;
     error: ServerFlashMessage;
     info: ServerFlashMessage;
+    location?: SnackbarLocation;
 }

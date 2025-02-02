@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Layout from "@js/Pages/Layout.vue";
+import AppLayout from "@js/Pages/AppLayout.vue";
 import axios from "@js/common/axios";
 import { ref } from "vue";
 import {ValidationRule, formRules } from "@js/common/form-rules";
@@ -59,7 +59,7 @@ async function register(): Promise<void> {
 </script>
 
 <template>
-  <Layout>
+  <AppLayout>
     <v-container>
       <v-row
         justify="center"
@@ -152,5 +152,5 @@ async function register(): Promise<void> {
         </v-col>
       </v-row>
     </v-container>
-  </Layout>
+  </AppLayout>
 </template>

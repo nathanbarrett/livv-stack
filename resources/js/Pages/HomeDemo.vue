@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Layout from "./Layout.vue";
+import AppLayout from "@js/Pages/AppLayout.vue";
 import AvailableComponents from "@js/components/demo/ThemeShowcase.vue";
 import { computed, ref } from "vue";
 import { User } from "@js/contracts/models";
@@ -13,7 +13,7 @@ const user = computed<User|null>(() => usePage().props.auth.user);
 </script>
 
 <template>
-  <Layout>
+  <AppLayout>
     <v-container>
       <v-row
         justify="center"
@@ -46,5 +46,5 @@ const user = computed<User|null>(() => usePage().props.auth.user);
         </v-row>
       <AvailableComponents />
     </v-container>
-  </Layout>
+  </AppLayout>
 </template>

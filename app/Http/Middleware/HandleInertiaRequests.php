@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\FlashLocation;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -44,6 +45,7 @@ class HandleInertiaRequests extends Middleware
             'flash.error' => fn () => $request->session()->get('error'),
             'flash.info' => fn () => $request->session()->get('info'),
             'flash.warning' => fn () => $request->session()->get('warning'),
+            'flash.location' => fn () => $request->session()->get(FlashLocation::sessionKey()),
 
             'passwordResetToken' => fn () => $request->session()->get('password-reset-token'),
             'passwordResetEmail' => fn () => $request->session()->get('password-reset-email'),

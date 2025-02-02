@@ -4,15 +4,16 @@ import { usePage } from "@inertiajs/vue3";
 import { ServerFlashMessage, ServerFlashMessages, FlashMessageConfig } from "@js/contracts/session-flash-messages";
 import { SnackbarLocation } from "@js/common/snackbar";
 
+const DEFAULT_LOCATION: SnackbarLocation = "bottom center";
+const DEFAULT_TIMEOUT = 5000;
+
 interface FlashMessages {
     success: FlashMessageConfig;
     warning: FlashMessageConfig;
     error: FlashMessageConfig;
     info: FlashMessageConfig;
+    location: SnackbarLocation;
 }
-
-const defaultTimeout = 5000;
-const defaultLocation = ref<SnackbarLocation>("bottom center");
 
 const successFallbackColor = "success";
 const warningFallbackColor = "warning";
@@ -28,10 +29,11 @@ const flashData = computed<FlashMessages>(() => {
     const serverFlashData = usePage().props.flash as ServerFlashMessages;
 
     return {
-        success: formatFlashMessage(serverFlashData.success, successFallbackColor, defaultTimeout),
-        warning: formatFlashMessage(serverFlashData.warning, warningFallbackColor, defaultTimeout),
-        error: formatFlashMessage(serverFlashData.error, errorFallbackColor, defaultTimeout),
-        info: formatFlashMessage(serverFlashData.info, infoFallbackColor, defaultTimeout)
+        success: formatFlashMessage(serverFlashData.success, successFallbackColor, DEFAULT_TIMEOUT),
+        warning: formatFlashMessage(serverFlashData.warning, warningFallbackColor, DEFAULT_TIMEOUT),
+        error: formatFlashMessage(serverFlashData.error, errorFallbackColor, DEFAULT_TIMEOUT),
+        info: formatFlashMessage(serverFlashData.info, infoFallbackColor, DEFAULT_TIMEOUT),
+        location: serverFlashData.location || DEFAULT_LOCATION
     }
 });
 
@@ -73,7 +75,7 @@ onMounted(() => {
       v-model="showSuccess"
       :color="flashData.success.color"
       :timeout="flashData.success.timeout"
-      bottom
+      :location="flashData.location"
       :multi-line="true"
     >
       {{ flashData.success.message }}
@@ -82,7 +84,7 @@ onMounted(() => {
       v-model="showWarning"
       :color="flashData.warning.color"
       :timeout="flashData.warning.timeout"
-      :location="defaultLocation"
+      :location="flashData.location"
       :multi-line="true"
     >
       {{ flashData.warning.message }}
@@ -91,7 +93,7 @@ onMounted(() => {
       v-model="showError"
       :color="flashData.error.color"
       :timeout="flashData.error.timeout"
-      :location="defaultLocation"
+      :location="flashData.location"
       :multi-line="true"
     >
       {{ flashData.error.message }}
@@ -100,7 +102,7 @@ onMounted(() => {
       v-model="showInfo"
       :color="flashData.info.color"
       :timeout="flashData.info.timeout"
-      :location="defaultLocation"
+      :location="flashData.location"
       :multi-line="true"
     >
       {{ flashData.info.message }}
