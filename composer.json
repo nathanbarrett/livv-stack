@@ -6,21 +6,21 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "inertiajs/inertia-laravel": "^1.0",
-        "laravel/framework": "^v11.25.0",
-        "laravel/tinker": "^v2.10.0",
-        "nathanbarrett/laravel-repositories": "^1.1.0"
+        "inertiajs/inertia-laravel": "^v2.0.1",
+        "laravel/framework": "^v12.3.0",
+        "laravel/tinker": "^v2.10.1",
+        "nathanbarrett/laravel-repositories": "^1.2.0"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^3.0",
-        "fakerphp/faker": "^1.23",
-        "larastan/larastan": "^2.9",
+        "barryvdh/laravel-ide-helper": "^v3.5.5",
+        "fakerphp/faker": "^v1.24.1",
+        "larastan/larastan": "^v3.2.0",
         "laravel/pint": "^1.13",
-        "laravel/sail": "^1.26",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.0",
-        "phpunit/phpunit": "^10.5",
-        "spatie/laravel-ignition": "^2.4"
+        "laravel/sail": "^v1.41.0",
+        "mockery/mockery": "^1.6.12",
+        "nunomaduro/collision": "^v8.7.0",
+        "phpunit/phpunit": "^11.5.15",
+        "spatie/laravel-ignition": "^2.9.1"
     },
     "autoload": {
         "psr-4": {

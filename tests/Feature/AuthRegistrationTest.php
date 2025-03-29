@@ -10,15 +10,14 @@ use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AuthRegistrationTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_register_a_user_with_valid_data(): void
     {
         $newUser = $this->registerNewUser();
@@ -32,9 +31,7 @@ class AuthRegistrationTest extends TestCase
         $this->assertNotNull(auth()->user());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_verify_an_email_address_with_a_valid_token(): void
     {
         /** @var User $newUser */
@@ -70,9 +67,7 @@ class AuthRegistrationTest extends TestCase
         $this->assertNotNull($newUser->fresh()->email_verified_at);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_not_verify_an_email_address_with_an_expired_token(): void
     {
         $tokenExpirationSeconds = 60 * 60 * 24;

@@ -6,15 +6,14 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AuthLoginTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_login_a_user_with_valid_credentials(): void
     {
         $this->assertNull(auth()->user());
@@ -40,9 +39,7 @@ class AuthLoginTest extends TestCase
         $this->assertSame($user->id, $loggedInUser->id);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_not_login_a_user_with_invalid_credentials(): void
     {
         $this->assertNull(auth()->user());
@@ -64,9 +61,7 @@ class AuthLoginTest extends TestCase
         $this->assertNull(auth()->user());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_logout_a_user(): void
     {
         /** @var User $user */

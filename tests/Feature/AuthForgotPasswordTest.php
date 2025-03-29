@@ -9,15 +9,14 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class AuthForgotPasswordTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_reset_a_password_for_an_existing_user(): void
     {
         Mail::fake();
@@ -82,9 +81,7 @@ class AuthForgotPasswordTest extends TestCase
         $this->assertSame($user->id, auth()->user()->id);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_should_not_reset_a_password_for_an_expired_token(): void
     {
         Mail::fake();
