@@ -9,7 +9,7 @@ LIVV is designed to be a starting point for building web applications with a mod
 
 ## Features
 
-- Laravel 11.x, PHP 8.3
+- Laravel 12.x, PHP 8.4
 - Inertia.js for hybrid frontend
 - Vue ^3.5 with TypeScript
 - Vuetify 3 using Material Design Icons
