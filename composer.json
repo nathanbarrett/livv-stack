@@ -42,6 +42,7 @@
             "@php artisan ide-helper:models -N"
         ],
         "lint": "vendor/bin/pint --test",
+        "lint-fix": "vendor/bin/pint --repair",
         "format": "vendor/bin/pint -v",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

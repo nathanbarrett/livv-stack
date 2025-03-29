@@ -15,12 +15,12 @@ class DemoController extends Controller
     {
         $type = FlashMessageType::tryFrom($request->get('type', 'info'));
 
-        if (!$type) {
+        if (! $type) {
             return redirect()->route('home')->with('error', 'Invalid flash message type');
         }
 
         return redirect()->route('home')
-            ->with($type->value, 'This is a ' . $type->value . ' message from the server!')
+            ->with($type->value, 'This is a '.$type->value.' message from the server!')
             ->with(FlashLocation::sessionKey(), FlashLocation::TOP_LEFT->value);
     }
 }
