@@ -66,8 +66,8 @@ const showSnackbar = () => {
         <v-card-actions>
             <v-spacer />
             <v-btn
-                @click="showSnackbar"
                 color="primary"
+                @click="showSnackbar"
             >
                 Show Notification
             </v-btn>

@@ -42,7 +42,7 @@ async function updatePassword() {
             password: newPassword.value,
         });
         openDialog.value = false;
-    } catch (e) {
+    } catch {
         error.value = "Something went wrong.";
     } finally {
         updatingPassword.value = false;

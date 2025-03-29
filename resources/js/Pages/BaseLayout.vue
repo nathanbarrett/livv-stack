@@ -18,7 +18,8 @@ const csrfToken = computed<string>(() => usePage().props.csrfToken as string);
             name="csrf-token"
             :content="csrfToken"
         >
-        <link rel="icon" href="/favicon.png"
+        <link
+rel="icon" href="/favicon.png"
             type="image/png"
         >
         <title>{{ appName }}</title>

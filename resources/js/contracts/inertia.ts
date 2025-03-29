@@ -1,6 +1,6 @@
 import { User } from "./models";
 // import { usePage } from "@inertiajs/vue3";
-import { Page, PageProps } from "@inertiajs/core";
+import { PageProps } from "@inertiajs/core";
 import {ServerFlashMessage} from "@js/contracts/session-flash-messages";
 // import { get } from "lodash";
 

@@ -62,8 +62,8 @@ const confirm = async () => {
                         persistent-hint
                         outlined />
                     <v-text-field
-                        class="mt-5"
                         v-model="cancelButtonText"
+                        class="mt-5"
                         label="Cancel Button Text"
                         outlined />
                     <v-text-field
@@ -91,9 +91,9 @@ const confirm = async () => {
         <v-card-actions>
             <v-spacer />
             <v-btn
-                @click="confirm"
                 :disabled="!confirmReady"
-                color="primary">
+                color="primary"
+                @click="confirm">
                 Show Confirm Dialog
             </v-btn>
         </v-card-actions>

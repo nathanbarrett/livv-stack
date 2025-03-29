@@ -27,7 +27,7 @@ watch(() => open, (_open) => {
 });
 
 // autofocus the email field when the dialog opens
-watch(dialogOpen, (open) => {
+watch(dialogOpen, () => {
     if (dialogOpen.value) {
         setTimeout(() => {
             // focus the email field
@@ -48,7 +48,7 @@ async function sendForgotPasswordEmail(): Promise<void> {
         await axios.post("/forgot-password", {
             email: email.value
         });
-    } catch (e) {
+    } catch {
         error.value = "Something went wrong.";
         fetching.value = false;
         return;
@@ -67,7 +67,7 @@ async function login(): Promise<void> {
             password: password.value
         });
         window.location.reload();
-    } catch (e) {
+    } catch {
         error.value = "Invalid email / password combination";
     } finally {
         fetching.value = false;

@@ -4,7 +4,7 @@ import { vuetify } from '@js/vuetify/veutify'
 
 createInertiaApp({
     resolve: name => {
-        // @ts-ignore
+        // @ts-expect-error import.meta.glob is not a function
         const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
         return pages[`./Pages/${name}.vue`]
     },

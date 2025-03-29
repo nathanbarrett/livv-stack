@@ -26,8 +26,8 @@ function goToRedirect() {
         <v-card-actions>
             <v-spacer />
             <v-btn
-                @click="goToRedirect"
                 :color="type"
+                @click="goToRedirect"
             >
                 Redirect with Flash Info
             </v-btn>
