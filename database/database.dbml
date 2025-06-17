@@ -1,0 +1,114 @@
+Project your_project {
+  database_type: 'MySQL'
+  Note: '''
+  Put project description here.
+  '''
+}
+
+Table users {
+  id bigint [pk, increment, note: 'Primary key - unique identifier for each user']
+  name varchar(255) [not null, note: 'Full name of the user']
+  email varchar(255) [unique, not null, note: 'Email address used for login and communication']
+  email_verified_at timestamp [null, note: 'Timestamp when email was verified, null if unverified']
+  password varchar(255) [not null, note: 'Hashed password for authentication']
+  remember_token varchar(100) [null, note: 'Token for "remember me" functionality']
+  created_at timestamp [null, note: 'Record creation timestamp']
+  updated_at timestamp [null, note: 'Record last modification timestamp']
+
+  Note: '''
+  Core user authentication and profile management table.
+  Handles user registration, login, email verification
+  '''
+}
+
+Table email_verification_tokens {
+  email varchar(255) [pk, note: 'Email address requiring verification (primary key)']
+  token varchar(255) [not null, note: 'Verification token sent to user email']
+  created_at timestamp [null, note: 'When the verification token was generated']
+
+  Note: '''
+  Temporary tokens for email address verification during user registration.
+  Tokens expire after a set time period for security. Part of Laravel's
+  email verification system.
+  '''
+}
+
+Table password_reset_tokens {
+  email varchar(255) [pk, note: 'Email address requesting password reset (primary key)']
+  token varchar(255) [not null, note: 'Password reset token sent to user email']
+  created_at timestamp [null, note: 'When the reset token was generated']
+
+  Note: '''
+  Temporary tokens for password reset functionality. Allows users to
+  securely reset their passwords via email verification. Tokens expire
+  after a set time period for security.
+  '''
+}
+
+
+Table jobs {
+  id bigint [pk, increment, note: 'Primary key - unique identifier for each queued job']
+  queue varchar(255) [not null, note: 'Queue name where job should be processed']
+  payload longtext [not null, note: 'Serialized job data and parameters']
+  attempts tinyint [not null, note: 'Number of times job has been attempted']
+  reserved_at int [null, note: 'Unix timestamp when job was reserved by worker']
+  available_at int [not null, note: 'Unix timestamp when job becomes available for processing']
+  created_at int [not null, note: 'Unix timestamp when job was created']
+
+  indexes {
+    queue [name: 'jobs_queue_index', note: 'Index for efficient job queue processing']
+  }
+
+  Note: '''
+  Laravel job queue table for background task processing. Handles
+  asynchronous operations like email sending, data processing, and
+  other time-consuming tasks outside the web request cycle.
+  '''
+}
+
+Table job_batches {
+  id varchar(255) [pk, note: 'Batch identifier (primary key)']
+  name varchar(255) [not null, note: 'Human-readable name for the batch']
+  total_jobs int [not null, note: 'Total number of jobs in the batch']
+  pending_jobs int [not null, note: 'Number of jobs not yet processed']
+  failed_jobs int [not null, note: 'Number of jobs that failed processing']
+  failed_job_ids longtext [not null, note: 'JSON array of failed job IDs']
+  options mediumtext [null, note: 'Batch configuration options']
+  cancelled_at int [null, note: 'Unix timestamp when batch was cancelled']
+  created_at int [not null, note: 'Unix timestamp when batch was created']
+  finished_at int [null, note: 'Unix timestamp when batch completed']
+
+  Note: '''
+  Laravel job batching system for grouping related jobs together.
+  Allows tracking progress, handling failures, and coordinating
+  completion of multiple related background tasks.
+  '''
+}
+
+Table failed_jobs {
+  id bigint [pk, increment, note: 'Primary key - unique identifier for each failed job']
+  uuid varchar(255) [unique, not null, note: 'Unique identifier for the failed job']
+  connection text [not null, note: 'Queue connection name where job failed']
+  queue text [not null, note: 'Queue name where job failed']
+  payload longtext [not null, note: 'Original job data and parameters']
+  exception longtext [not null, note: 'Exception/error details that caused failure']
+  failed_at timestamp [not null, default: `CURRENT_TIMESTAMP`, note: 'When the job failed']
+
+  Note: '''
+  Storage for jobs that failed during processing. Allows for debugging,
+  monitoring, and potential retry of failed background tasks. Critical
+  for maintaining system reliability and troubleshooting.
+  '''
+}
+
+Table migrations {
+  id int [pk, increment, note: 'Primary key - unique identifier for each migration']
+  migration varchar(255) [not null, note: 'Migration file name']
+  batch int [not null, note: 'Migration batch number for rollback grouping']
+
+  Note: '''
+  Laravel migration tracking table. Records which database migrations
+  have been executed to manage schema versioning and enable rollbacks.
+  Essential for database schema management across environments.
+  '''
+}
