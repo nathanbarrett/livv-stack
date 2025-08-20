@@ -65,6 +65,9 @@ docker compose down -v
 vendor/bin/sail build --no-cache
 vendor/bin/sail up -d
 
+# Mark home directory as safe to use for git
+vendor/bin/sail run git config --global --add safe.directory /var/www/html
+
 # Generate application key, if it doesn't exist
 if grep -q "^APP_KEY=$" .env; then
     echo "APP_KEY is not set. Generating a new APP_KEY..."
