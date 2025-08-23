@@ -1,134 +1,99 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Tests\Feature;
-
 use App\Mail\VerifyEmail;
 use App\Models\User;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class AuthRegistrationTest extends TestCase
-{
-    use LazilyRefreshDatabase;
+uses(\Illuminate\Foundation\Testing\LazilyRefreshDatabase::class);
 
-    #[Test]
-    public function it_should_register_a_user_with_valid_data(): void
-    {
-        $newUser = $this->registerNewUser();
+test('it should register a user with valid data', function () {
+    /** @var TestCase $this */
+    $newUser = registerNewUser();
 
-        $this->assertDatabaseHas('users', [
-            'name' => $newUser->name,
-            'email' => $newUser->email,
-        ]);
+    $this->assertDatabaseHas('users', [
+        'name' => $newUser->name,
+        'email' => $newUser->email,
+    ]);
 
-        // user is auto logged in after registration
-        $this->assertNotNull(auth()->user());
-    }
+    // user is auto logged in after registration
+    $this->assertAuthenticated();
+});
 
-    #[Test]
-    public function it_should_verify_an_email_address_with_a_valid_token(): void
-    {
-        /** @var User $newUser */
-        $newUser = User::factory()->make();
+test('it should verify an email address with a valid token', function () {
+    /** @var TestCase $this */
+    /** @var User $newUser */
+    $newUser = User::factory()->make();
 
-        $this->assertDatabaseMissing('email_verification_tokens', [
-            'email' => $newUser->email,
-        ]);
+    $this->assertDatabaseMissing('email_verification_tokens', [
+        'email' => $newUser->email,
+    ]);
 
-        $newUser = $this->registerNewUser($newUser);
+    $newUser = registerNewUser($newUser);
 
-        Mail::assertSent(VerifyEmail::class, function (VerifyEmail $mail) use ($newUser) {
-            return $mail->hasTo($newUser->email);
-        });
+    Mail::assertSent(VerifyEmail::class, function (VerifyEmail $mail) use ($newUser) {
+        return $mail->hasTo($newUser->email);
+    });
 
-        $token = DB::table('email_verification_tokens')
-            ->where('email', $newUser->email)
-            ->select(['token'])
-            ->first()
-            ->token;
+    $token = DB::table('email_verification_tokens')
+        ->where('email', $newUser->email)
+        ->select(['token'])
+        ->first()
+        ->token;
 
-        // go to the link in the email
-        $response = $this->get(route('auth.verify-email', [
-            'token' => $token,
-        ]));
+    // go to the link in the email
+    $response = $this->get(route('auth.verify-email', [
+        'token' => $token,
+    ]));
 
-        $response->assertRedirectToRoute('home');
+    $response->assertRedirectToRoute('home');
 
-        $this->assertDatabaseMissing('email_verification_tokens', [
-            'email' => $newUser->email,
-        ]);
+    $this->assertDatabaseMissing('email_verification_tokens', [
+        'email' => $newUser->email,
+    ]);
 
-        $this->assertNotNull($newUser->fresh()->email_verified_at);
-    }
+    expect($newUser->fresh()->email_verified_at)->not->toBeNull();
+});
 
-    #[Test]
-    public function it_should_not_verify_an_email_address_with_an_expired_token(): void
-    {
-        $tokenExpirationSeconds = 60 * 60 * 24;
-        config(['auth.email_verification.token_expiration' => $tokenExpirationSeconds]);
+test('it should not verify an email address with an expired token', function () {
+    /** @var TestCase $this */
+    $tokenExpirationSeconds = 60 * 60 * 24;
+    config(['auth.email_verification.token_expiration' => $tokenExpirationSeconds]);
 
-        $this->assertNull(auth()->user());
+    $this->assertGuest();
 
-        $newUser = User::factory()->make();
+    $newUser = User::factory()->make();
 
-        $this->assertDatabaseMissing('email_verification_tokens', [
-            'email' => $newUser->email,
-        ]);
+    $this->assertDatabaseMissing('email_verification_tokens', [
+        'email' => $newUser->email,
+    ]);
 
-        $newUser = $this->registerNewUser($newUser);
+    $newUser = registerNewUser($newUser);
 
-        Mail::assertSent(VerifyEmail::class, function (VerifyEmail $mail) use ($newUser) {
-            return $mail->hasTo($newUser->email);
-        });
+    Mail::assertSent(VerifyEmail::class, function (VerifyEmail $mail) use ($newUser) {
+        return $mail->hasTo($newUser->email);
+    });
 
-        $token = DB::table('email_verification_tokens')
-            ->where('email', $newUser->email)
-            ->select(['token'])
-            ->first()
-            ->token;
+    $token = DB::table('email_verification_tokens')
+        ->where('email', $newUser->email)
+        ->select(['token'])
+        ->first()
+        ->token;
 
-        $this->travelTo(now()->addSeconds($tokenExpirationSeconds + 1));
+    $this->travelTo(now()->addSeconds($tokenExpirationSeconds + 1));
 
-        // go to the link in the email
-        $response = $this->get(route('auth.verify-email', [
-            'token' => $token,
-        ]));
+    // go to the link in the email
+    $response = $this->get(route('auth.verify-email', [
+        'token' => $token,
+    ]));
 
-        $response->assertRedirectToRoute('home')
-            ->assertSessionHas('error', 'Invalid token');
+    $response->assertRedirectToRoute('home')
+        ->assertSessionHas('error', 'Invalid token');
 
-        $this->assertDatabaseMissing('email_verification_tokens', [
-            'email' => $newUser->email,
-        ]);
+    $this->assertDatabaseMissing('email_verification_tokens', [
+        'email' => $newUser->email,
+    ]);
 
-        $this->assertNull($newUser->fresh()->email_verified_at);
-    }
-
-    private function registerNewUser(?User $nonPersisted = null): User
-    {
-        Mail::fake();
-
-        config(['auth.email_verification.enabled' => true]);
-
-        $user = $nonPersisted ?? User::factory()->make();
-
-        $response = $this->postJson(route('auth.register'), [
-            'name' => $user->name,
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-        $response->assertStatus(Response::HTTP_CREATED);
-
-        return User::query()
-            ->where('email', $user->email)
-            ->where('email_verified_at', null)
-            ->where('name', $user->name)
-            ->firstOrFail();
-    }
-}
+    expect($newUser->fresh()->email_verified_at)->toBeNull();
+});

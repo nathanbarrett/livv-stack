@@ -1,150 +1,130 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Tests\Feature;
-
 use App\Mail\ForgotPassword;
 use App\Models\User;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-class AuthForgotPasswordTest extends TestCase
-{
-    use LazilyRefreshDatabase;
+uses(\Illuminate\Foundation\Testing\LazilyRefreshDatabase::class);
 
-    #[Test]
-    public function it_should_reset_a_password_for_an_existing_user(): void
-    {
-        Mail::fake();
+test('it should reset a password for an existing user', function () {
+    /** @var TestCase $this */
+    Mail::fake();
 
-        $forgottenPassword = 'password';
-        $user = User::factory()->create([
-            'password' => bcrypt($forgottenPassword),
-        ]);
+    $forgottenPassword = 'password';
+    $user = User::factory()->create([
+        'password' => bcrypt($forgottenPassword),
+    ]);
 
-        $this->assertNull(auth()->user());
+    $this->assertGuest();
 
-        $response = $this->postJson(route('auth.login'), [
-            'email' => $user->email,
-            'password' => 'invalid-password',
-        ]);
-        $response->assertStatus(401);
+    $response = $this->postJson(route('auth.login'), [
+        'email' => $user->email,
+        'password' => 'invalid-password',
+    ]);
+    $response->assertStatus(401);
 
-        $response = $this->postJson(route('auth.forgot-password'), [
-            'email' => $user->email,
-        ]);
+    $response = $this->postJson(route('auth.forgot-password'), [
+        'email' => $user->email,
+    ]);
 
-        $response->assertOk();
+    $response->assertOk();
 
-        Mail::assertSent(ForgotPassword::class, function (ForgotPassword $mail) use ($user) {
-            return $mail->hasTo($user->email);
-        });
+    Mail::assertSent(ForgotPassword::class, function (ForgotPassword $mail) use ($user) {
+        return $mail->hasTo($user->email);
+    });
 
-        $token = $this->getPasswordResetToken($user);
-        // go to the link in the email
-        $response = $this->get(route('auth.reset-password', [
-            'token' => $token,
-        ]));
+    $token = getPasswordResetToken($user);
+    // go to the link in the email
+    $response = $this->get(route('auth.reset-password', [
+        'token' => $token,
+    ]));
 
-        $response->assertRedirectToRoute('home')
-            ->assertSessionHas('password-reset-token', $token)
-            ->assertSessionHas('password-reset-email', $user->email);
+    $response->assertRedirectToRoute('home')
+        ->assertSessionHas('password-reset-token', $token)
+        ->assertSessionHas('password-reset-email', $user->email);
 
-        $updatedPassword = 'new-password';
-        $response = $this->postJson(route('auth.update-password', [
-            'token' => $token,
-            'email' => $user->email,
-            'password' => $updatedPassword,
-        ]));
-        $response->assertOk();
+    $updatedPassword = 'new-password';
+    $response = $this->postJson(route('auth.update-password', [
+        'token' => $token,
+        'email' => $user->email,
+        'password' => $updatedPassword,
+    ]));
+    $response->assertOk();
 
-        // auto logs in user
-        $this->assertNotNull(auth()->user());
+    // auto logs in user
+    $this->assertAuthenticated();
 
-        auth()->logout();
+    auth()->logout();
 
-        $response = $this->postJson(route('auth.login'), [
-            'email' => $user->email,
-            'password' => $updatedPassword,
-        ]);
-        $response->assertOk();
+    $response = $this->postJson(route('auth.login'), [
+        'email' => $user->email,
+        'password' => $updatedPassword,
+    ]);
+    $response->assertOk();
 
-        $this->assertDatabaseMissing('password_reset_tokens', [
-            'email' => $user->email,
-        ]);
+    $this->assertDatabaseMissing('password_reset_tokens', [
+        'email' => $user->email,
+    ]);
 
-        // auto logs in user
-        $this->assertSame($user->id, auth()->user()->id);
-    }
+    // auto logs in user
+    $this->assertSame($user->id, auth()->user()->id);
+});
 
-    #[Test]
-    public function it_should_not_reset_a_password_for_an_expired_token(): void
-    {
-        Mail::fake();
+test('it should not reset a password for an expired token', function () {
+    /** @var TestCase $this */
+    Mail::fake();
 
-        $tokenExpirationMinutes = 60 * 24;
-        config(['auth.passwords.users.expire' => $tokenExpirationMinutes]);
+    $tokenExpirationMinutes = 60 * 24;
+    config(['auth.passwords.users.expire' => $tokenExpirationMinutes]);
 
-        $forgottenPassword = 'password';
-        $user = User::factory()->create([
-            'password' => bcrypt($forgottenPassword),
-        ]);
+    $forgottenPassword = 'password';
+    $user = User::factory()->create([
+        'password' => bcrypt($forgottenPassword),
+    ]);
 
-        $this->assertNull(auth()->user());
+    $this->assertGuest();
 
-        $response = $this->postJson(route('auth.login'), [
-            'email' => $user->email,
-            'password' => 'invalid-password',
-        ]);
-        $response->assertStatus(401);
+    $response = $this->postJson(route('auth.login'), [
+        'email' => $user->email,
+        'password' => 'invalid-password',
+    ]);
+    $response->assertStatus(401);
 
-        $response = $this->postJson(route('auth.forgot-password'), [
-            'email' => $user->email,
-        ]);
+    $response = $this->postJson(route('auth.forgot-password'), [
+        'email' => $user->email,
+    ]);
 
-        $response->assertOk();
+    $response->assertOk();
 
-        Mail::assertSent(ForgotPassword::class, function (ForgotPassword $mail) use ($user) {
-            return $mail->hasTo($user->email);
-        });
+    Mail::assertSent(ForgotPassword::class, function (ForgotPassword $mail) use ($user) {
+        return $mail->hasTo($user->email);
+    });
 
-        $token = $this->getPasswordResetToken($user);
-        // go to the link in the email
-        $response = $this->get(route('auth.reset-password', [
-            'token' => $token,
-        ]));
+    $token = getPasswordResetToken($user);
+    // go to the link in the email
+    $response = $this->get(route('auth.reset-password', [
+        'token' => $token,
+    ]));
 
-        $response->assertRedirectToRoute('home')
-            ->assertSessionHas('password-reset-token', $token)
-            ->assertSessionHas('password-reset-email', $user->email);
+    $response->assertRedirectToRoute('home')
+        ->assertSessionHas('password-reset-token', $token)
+        ->assertSessionHas('password-reset-email', $user->email);
 
-        $this->travelTo(now()->addMinutes($tokenExpirationMinutes + 1));
+    $this->travelTo(now()->addMinutes($tokenExpirationMinutes + 1));
 
-        $updatedPassword = 'new-password';
-        $response = $this->postJson(route('auth.update-password', [
-            'token' => $token,
-            'email' => $user->email,
-            'password' => $updatedPassword,
-        ]));
-        $response->assertStatus(401);
+    $updatedPassword = 'new-password';
+    $response = $this->postJson(route('auth.update-password', [
+        'token' => $token,
+        'email' => $user->email,
+        'password' => $updatedPassword,
+    ]));
+    $response->assertStatus(401);
 
-        $this->assertDatabaseMissing('password_reset_tokens', [
-            'email' => $user->email,
-        ]);
+    $this->assertDatabaseMissing('password_reset_tokens', [
+        'email' => $user->email,
+    ]);
 
-        $this->assertNull(auth()->user());
-    }
-
-    private function getPasswordResetToken(User $user): string
-    {
-        return DB::table('password_reset_tokens')
-            ->where('email', $user->email)
-            ->select(['token'])
-            ->first()
-            ->token;
-    }
-}
+    $this->assertGuest();
+});
