@@ -17,7 +17,7 @@
         "larastan/larastan": "^v3.2.0",
         "laravel/boost": "^1.0",
         "laravel/pint": "^1.13",
-        "laravel/sail": "^v1.41.0",
+        "laravel/sail": "^v1.44.0",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^v8.7.0",
         "pestphp/pest": "^4.0",

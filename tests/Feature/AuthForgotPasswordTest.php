@@ -2,7 +2,6 @@
 
 use App\Mail\ForgotPassword;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 

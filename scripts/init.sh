@@ -21,6 +21,12 @@ fi
 
 # Remove vendor and node_modules directories if they exist
 if [ -d "vendor" ]; then
+    echo "This will reset and rebuild your current setup. Do you want to continue? (y/n)"
+    read -r response
+    if [[ "$response" != "y" && "$response" != "Y" ]]; then
+        echo "Exiting manually."
+        exit 0
+    fi
     echo "Removing vendor directory..."
     vendor/bin/sail down -v
     rm -rf vendor
@@ -64,9 +70,6 @@ echo "Building and running containers..."
 docker compose down -v
 vendor/bin/sail build --no-cache
 vendor/bin/sail up -d
-
-# Mark home directory as safe to use for git
-vendor/bin/sail run git config --global --add safe.directory /var/www/html
 
 # Generate application key, if it doesn't exist
 if grep -q "^APP_KEY=$" .env; then
@@ -114,6 +117,14 @@ if [ -d ".git" ]; then
         fi
     else
         echo "Repository name does not match livv-stack. Skipping git reinitialization..."
+    fi
+
+    # Mark home directory as safe to use for git
+    if ! grep -q "\[safe\]" .git/config; then
+        echo -e "\n[safe]\n\tdirectory = /var/www/html" >> .git/config
+        echo "Added /var/www/html as a safe directory in .git/config."
+    else
+        echo "/var/www/html is already marked as a safe directory in .git/config."
     fi
 else
     echo "No .git directory found. Initializing git repository..."
