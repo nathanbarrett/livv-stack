@@ -2,7 +2,7 @@
 import AppLayout from "@js/Pages/AppLayout.vue";
 import AvailableComponents from "@js/components/demo/ThemeShowcase.vue";
 import { computed, ref } from "vue";
-import { User } from "@js/contracts/models";
+import { User } from "@js/types/models";
 import { usePage } from "@inertiajs/vue3";
 import SnackbarDemo from "@js/components/demo/SnackbarDemo.vue";
 import ConfirmDialogDemo from "@js/components/demo/ConfirmDialogDemo.vue";

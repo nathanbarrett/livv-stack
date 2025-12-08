@@ -3,7 +3,7 @@ import AppLayout from "@js/Pages/AppLayout.vue";
 import axios from "@js/common/axios";
 import { ref } from "vue";
 import {ValidationRule, formRules } from "@js/common/form-rules";
-import { User } from "@js/contracts/models";
+import { User } from "@js/types/models";
 import {AxiosError, AxiosResponse} from "axios";
 
 interface RegisterRequestData {

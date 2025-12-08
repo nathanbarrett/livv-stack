@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useTheme } from "vuetify";
-import { User } from "@js/contracts/models";
+import { User } from "@js/types/models";
 import { usePage, router } from "@inertiajs/vue3";
 
 const theme = useTheme();

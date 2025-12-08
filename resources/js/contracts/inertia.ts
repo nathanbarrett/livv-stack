@@ -1,4 +1,4 @@
-import { User } from "./models";
+import { User } from "@js/types/models";
 // import { usePage } from "@inertiajs/vue3";
 import { PageProps } from "@inertiajs/core";
 import {ServerFlashMessage} from "@js/contracts/session-flash-messages";

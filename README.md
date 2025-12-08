@@ -19,6 +19,7 @@ LIVV is designed to be a starting point for building web applications with a mod
 - Repositories for an abstraction layer between Models and Services
 - Auth scaffolding (UI and backend) including login, registration, password reset, and email verification
 - IDE helpers ready to go. Update with `sail composer ide-helpers`
+- Eloquent model to typescript interface tools built in. Just run `sail composer ts-helpers`
 - PHPStan ready to go `sail composer analyse`
 - Pest tests for auth scaffolding `sail artisan test`. Pest is a modern testing framework with a focus on simplicity and an elegant syntax. It provides a powerful and expressive testing experience, and even supports browser testing with Laravel Dusk.
 - Laravel Pint for formatting: `sail composer format`
