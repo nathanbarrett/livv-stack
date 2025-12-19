@@ -1,0 +1,33 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "./vendor/bin/sail",
+            "args": [
+                "php",
+                "artisan",
+                "boost:mcp"
+            ]
+        },
+        "vuetify": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@vuetify/mcp"
+            ]
+        },
+        "backlog": {
+            "command": "backlog",
+            "args": [
+                "mcp",
+                "start"
+            ]
+        },
+        "dynamic-context": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "dynamic-context-mcp"
+            ]
+        }
+    }
+}

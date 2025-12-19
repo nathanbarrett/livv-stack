@@ -334,3 +334,20 @@ Route::get('/users', function () {
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test` with a specific filename or filter.
 </laravel-boost-guidelines>
+
+<!-- DYNAMIC CONTEXT MCP GUIDELINES START -->
+
+<CRITICAL_INSTRUCTION>
+
+## DYNAMIC CONTEXT INSTRUCTIONS
+
+This project uses dynamic context mcp to deliver "just in time" context for files that you are about to read, create, or edit.
+
+**CRITICAL GUIDANCE**
+
+- Before you read, create, or edit a file, check for dynamic context by requesting the `dynamic-context.get_context_for_file` tool with the file path as input.
+- If dynamic context is available, read it carefully to understand important details about how to work with that file.
+
+</CRITICAL_INSTRUCTION>
+
+<!-- DYNAMIC CONTEXT MCP GUIDELINES END -->

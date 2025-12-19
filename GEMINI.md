@@ -53,3 +53,21 @@ NOTE: Ignore all named tasks below unless I specifically ask you to do one of th
 Mark each checkbox as complete when you finish the task. If you can't complete a task, mark it as skipped and the reason why and I will look at it later.
 Add any additional tasks that you think are necessary to complete the task that I might have missed.
 
+
+
+<!-- DYNAMIC CONTEXT MCP GUIDELINES START -->
+
+<CRITICAL_INSTRUCTION>
+
+## DYNAMIC CONTEXT INSTRUCTIONS
+
+This project uses dynamic context mcp to deliver "just in time" context for files that you are about to read, create, or edit.
+
+**CRITICAL GUIDANCE**
+
+- Before you read, create, or edit a file, check for dynamic context by requesting the `dynamic-context.get_context_for_file` tool with the file path as input.
+- If dynamic context is available, read it carefully to understand important details about how to work with that file.
+
+</CRITICAL_INSTRUCTION>
+
+<!-- DYNAMIC CONTEXT MCP GUIDELINES END -->
