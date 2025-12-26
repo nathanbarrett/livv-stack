@@ -10,14 +10,11 @@
         "vscode": {
             "extensions": [
                 "editorconfig.editorconfig",
-                "ryannaddy.laravel-artisan",
-                "amiralizadeh9480.laravel-extra-intellisense",
-                "stef-k.laravel-goto-controller",
-                "codingyu.laravel-goto-view",
                 "mikestead.dotenv",
                 "christian-kohler.path-intellisense",
                 "esbenp.prettier-vscode",
-                "CoenraadS.bracket-pair-colorizer"
+                "Vue.volar",
+                "laravel.vscode-laravel"
             ],
             "settings": {}
         }

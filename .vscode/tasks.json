@@ -1,0 +1,69 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Codespaces Serve Laravel",
+            "type": "shell",
+            "command": "if [ \"$CODESPACES\" = \"true\" ]; then php artisan serve --host=0.0.0.0 --port=80; else echo \"Not in Codespaces, skipping Laravel serve.\"; fi",
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": ".",
+                        "file": 1,
+                        "location": 2,
+                        "message": 3
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".*Development Server.*",
+                    "endsPattern": ".*Server running on.*"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "group": "servers"
+            }
+        },
+        {
+            "label": "Codespaces Serve Vite",
+            "type": "shell",
+            "command": "if [ \"$CODESPACES\" = \"true\" ]; then npm run dev; else echo \"Not in Codespaces, skipping Vite serve.\"; fi",
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": ".",
+                        "file": 1,
+                        "location": 2,
+                        "message": 3
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".*VITE.*",
+                    "endsPattern": ".*ready in.*"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "group": "servers"
+            }
+        },
+        {
+            "label": "Codespaces Run Hosts",
+            "dependsOn": [
+                "Codespaces Serve Laravel",
+                "Codespaces Serve Vite"
+            ],
+            "problemMatcher": [],
+            "runOptions": {
+                "runOn": "folderOpen",
+                "instanceLimit": 1
+            }
+        }
+    ]
+}
