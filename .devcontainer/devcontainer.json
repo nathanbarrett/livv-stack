@@ -33,7 +33,8 @@
         },
         "5173": {
             "label": "Vite",
-            "description": "Vite HMR & Assets"
+            "description": "Vite HMR & Assets",
+            "visibility": "public"
         },
         "3306": {
             "label": "MySQL",
