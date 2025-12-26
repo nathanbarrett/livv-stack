@@ -8,11 +8,11 @@ export default defineConfig({
     server: {
         host: '0.0.0.0',
         cors: true,
-        hmr: {
-            host: process.env.CODESPACES === 'true'
-                ? `${process.env.CODESPACE_NAME}-5173.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
-                : 'localhost',
-            clientPort: process.env.CODESPACES === 'true' ? 443 : 5173,
+        hmr: process.env.CODESPACES === 'true' ? {
+            host: `${process.env.CODESPACE_NAME}-5173.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`,
+            clientPort: 443
+        } : {
+            host: 'localhost',
         },
     },
     resolve: {
