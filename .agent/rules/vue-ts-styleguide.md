@@ -1,6 +1,6 @@
 ---
 trigger: glob
-globs: resources/js/**/*.(vue|ts)
+globs: resources/js/**/*.{ts,vue}
 ---
 
 -   Always assume that `npm run dev` is already running somewhere

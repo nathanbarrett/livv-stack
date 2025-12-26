@@ -5,6 +5,15 @@ import vuetify from 'vite-plugin-vuetify';
 import path from 'path';
 
 export default defineConfig({
+    server: {
+        host: '0.0.0.0',
+        cors: true,
+        hmr: process.env.CODESPACES === 'true' ? {
+            clientPort: 443
+        } : {
+            host: 'localhost',
+        },
+    },
     resolve: {
         // keep in sync with path aliases in tsconfig.json
         alias: {

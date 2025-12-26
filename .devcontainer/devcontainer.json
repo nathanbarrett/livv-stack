@@ -23,31 +23,31 @@
         }
     },
     "remoteUser": "sail",
-    "postCreateCommand": "cp .env.example .env && chown -R 1000:1000 /var/www/html && composer install && npm install && php artisan key:generate && echo \"ASSET_URL=https://${CODESPACE_NAME}-80.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}\" >> .env",
+    "postCreateCommand": "cp -n .env.example .env; composer install; npm install; php artisan key:generate",
     "postStartCommand": "php artisan migrate --seed",
     "forwardPorts": [80, 5173, 3306, 8025],
     "portsAttributes": {
         "80": {
-            "label": "Inertia.js",
-            "description": "Inertia.js compiled assets"
+            "label": "Laravel App",
+            "description": "Main Laravel Application"
         },
         "5173": {
             "label": "Vite",
-            "description": "Laravel web app back end"
+            "description": "Vite HMR & Assets"
         },
         "3306": {
             "label": "MySQL",
-            "description": "MySQL database"
+            "description": "MySQL Database"
         },
         "8025": {
-            "label": "Mailhog",
-            "description": "Mailhog SMTP server"
+            "label": "Mailpit",
+            "description": "Mailpit Web UI"
         }
     },
     "runServices": [
-        "msql",
+        "mysql",
         "redis",
-        "mailhog",
+        "mailpit",
         "laravel.test"
     ]
 }
