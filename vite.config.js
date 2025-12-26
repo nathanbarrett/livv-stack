@@ -10,7 +10,8 @@ export default defineConfig({
         cors: true,
         hmr: process.env.CODESPACES === 'true' ? {
             host: `${process.env.CODESPACE_NAME}-5173.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`,
-            clientPort: 443
+            clientPort: 443,
+            protocol: 'wss',
         } : {
             host: 'localhost',
         },
