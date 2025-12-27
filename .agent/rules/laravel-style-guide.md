@@ -10,6 +10,8 @@ This file contains Laravel and PHP coding standards optimized for AI code assist
 ## Core Laravel Principle
 
 **Follow Laravel conventions first.** If Laravel has a documented way to do something, use it. Only deviate when you have a clear justification.
+-   use mcp server `laravel-boost` for Laravel conventions and best practices.
+-   you can auto fix any lint issues with `sail composer lint-fix`
 
 # Important
 

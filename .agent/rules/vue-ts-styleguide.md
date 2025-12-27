@@ -4,6 +4,7 @@ globs: resources/js/**/*.{ts,vue}
 ---
 
 -   Always assume that `npm run dev` is already running somewhere
+-   Use mcp server `laravel-boost` for best practices when working with InertiaJS
 -   If editing UI, at the end of your work always visually look at your page using browser mcp resources and check browser logs for any errors
 -   all user dashboard pages must extend the same layout in the same fashion
 -   Uses InertiaJS. See HandlesInertiaRequests for what you can access in your Vue components
