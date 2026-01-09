@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DemoController;
 use Illuminate\Support\Facades\Route;
@@ -34,3 +36,11 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('/forgot-password', [AuthController::class, 'sendResetPasswordEmail'])
         ->name('auth.forgot-password');
 });
+
+Route::get('/demo/kanban', function () {
+    return Inertia::render('KanbanDemo');
+})->name('kanban.demo');
+
+Route::prefix('api')
+    ->name('api.')
+    ->group(base_path('routes/api.php'));

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Mail\ForgotPassword;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;

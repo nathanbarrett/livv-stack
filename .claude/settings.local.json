@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__laravel-boost__list-routes",
+      "mcp__laravel-boost__browser-logs",
+      "mcp__laravel-boost__search-docs",
+      "mcp__backlog__task_view",
+      "mcp__backlog__task_edit",
+      "mcp__dynamic-context__get_context_for_file",
+      "mcp__laravel-boost__application-info",
+      "mcp__backlog__task_create",
+      "Bash(npm run tsc:*)",
+      "mcp__vuetify__get_component_api_by_version",
+      "Bash(npm run lint:*)",
+      "mcp__chrome-devtools__list_pages",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__fill",
+      "mcp__chrome-devtools__click",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__backlog__task_list",
+      "Bash(./vendor/bin/sail test:*)",
+      "Bash(./vendor/bin/sail composer:*)",
+      "mcp__chrome-devtools__evaluate_script",
+      "mcp__laravel-boost__database-schema",
+      "Bash(php -l:*)",
+      "mcp__chrome-devtools__list_console_messages",
+      "mcp__laravel-boost__last-error",
+      "mcp__chrome-devtools__list_network_requests",
+      "mcp__chrome-devtools__get_network_request",
+      "mcp__laravel-boost__database-query",
+      "Bash(./vendor/bin/sail artisan make:policy BookPolicy --model=Book)",
+      "Bash(grep:*)",
+      "mcp__chrome-devtools__wait_for",
+      "mcp__laravel-boost__read-log-entries",
+      "Bash(mkdir:*)",
+      "WebSearch",
+      "Bash(npm install:*)",
+      "Bash(npm run mermaid:check:*)",
+      "Bash(find:*)",
+      "mcp__backlog__get_workflow_overview"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "laravel-boost",
+    "vuetify",
+    "backlog",
+    "dynamic-context"
+  ]
+}
