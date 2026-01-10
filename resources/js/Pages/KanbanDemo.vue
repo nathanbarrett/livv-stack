@@ -6,9 +6,10 @@ import type { KanbanBoard as KanbanBoardType, CreateBoardRequest } from '@js/typ
 import axios from '@js/common/axios'
 import { error as showError, success as showSuccess } from '@js/common/snackbar'
 import { usePage } from '@inertiajs/vue3'
-import type { User } from '@js/types/models'
+import type { AppPageProps } from '@js/contracts/inertia'
 
-const user = computed<User | null>(() => usePage().props.auth.user)
+const page = usePage<AppPageProps>()
+const user = computed(() => page.props.auth.user)
 
 const boards = ref<KanbanBoardType[]>([])
 const selectedBoardId = ref<number | null>(null)
@@ -16,7 +17,18 @@ const loading = ref(true)
 const showCreateBoardDialog = ref(false)
 const newBoardName = ref('')
 const newBoardDescription = ref('')
+const newBoardProjectName = ref('')
+const copyFromBoardId = ref<number | null>(null)
 const creatingBoard = ref(false)
+
+const boardsWithColumns = computed(() =>
+  boards.value.filter((b) => b.columns && b.columns.length > 0)
+)
+
+const copyFromOptions = computed(() => [
+  { id: null, name: 'Start From Scratch' },
+  ...boardsWithColumns.value,
+])
 
 async function fetchBoards(): Promise<void> {
   loading.value = true
@@ -48,6 +60,8 @@ async function createBoard(): Promise<void> {
     const payload: CreateBoardRequest = {
       name: newBoardName.value,
       description: newBoardDescription.value || undefined,
+      project_name: newBoardProjectName.value || undefined,
+      copy_columns_from_board_id: copyFromBoardId.value || undefined,
     }
 
     const response = await axios.post('/api/kanban/boards', payload)
@@ -57,6 +71,8 @@ async function createBoard(): Promise<void> {
     showCreateBoardDialog.value = false
     newBoardName.value = ''
     newBoardDescription.value = ''
+    newBoardProjectName.value = ''
+    copyFromBoardId.value = null
   } catch (err) {
     showError('Failed to create board')
     console.error(err)
@@ -159,6 +175,26 @@ onMounted(() => {
             variant="outlined"
             density="comfortable"
             :rules="[(v: string) => !!v || 'Name is required']"
+            class="mb-3"
+          />
+
+          <v-text-field
+            v-model="newBoardProjectName"
+            label="Project Name (optional)"
+            variant="outlined"
+            density="comfortable"
+            class="mb-3"
+          />
+
+          <v-select
+            v-if="boardsWithColumns.length > 0"
+            v-model="copyFromBoardId"
+            :items="copyFromOptions"
+            item-title="name"
+            item-value="id"
+            label="Copy columns from"
+            variant="outlined"
+            density="comfortable"
             class="mb-3"
           />
 

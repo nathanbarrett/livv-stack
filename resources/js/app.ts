@@ -1,6 +1,13 @@
+import { configureEcho } from '@laravel/echo-vue';
+import 'highlight.js/styles/github-dark.css';
+
+configureEcho({
+    broadcaster: 'reverb',
+});
 import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { vuetify } from '@js/vuetify/veutify'
+import { vFillRemainingHeight } from '@js/directives/fillRemainingHeight'
 
 createInertiaApp({
     resolve: name => {
@@ -13,6 +20,7 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(vuetify)
+            .directive('fill-remaining-height', vFillRemainingHeight)
             .mount(el)
     },
 });

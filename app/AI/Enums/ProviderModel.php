@@ -548,9 +548,21 @@ enum ProviderModel: string
     {
         return array_values(array_filter(
             self::cases(),
-            fn (self $case): bool => str_contains($case->name, '_TEXT_')
+            fn (self $case): bool => self::hasModelType($case, 'TEXT')
                 && ($provider === null || str_starts_with($case->name, self::providerPrefix($provider)))
         ));
+    }
+
+    /**
+     * Check if a model enum case has the specified type.
+     */
+    private static function hasModelType(self $case, string $type): bool
+    {
+        // Pattern is {PROVIDER}_{TYPE}_{MODEL_NAME}
+        // Extract the second segment (after first underscore) and check if it matches
+        $parts = explode('_', $case->name, 3);
+
+        return isset($parts[1]) && $parts[1] === $type;
     }
 
     /**
@@ -562,7 +574,7 @@ enum ProviderModel: string
     {
         return array_values(array_filter(
             self::cases(),
-            fn (self $case): bool => str_contains($case->name, '_IMAGE_')
+            fn (self $case): bool => self::hasModelType($case, 'IMAGE')
                 && ($provider === null || str_starts_with($case->name, self::providerPrefix($provider)))
         ));
     }
@@ -576,7 +588,7 @@ enum ProviderModel: string
     {
         return array_values(array_filter(
             self::cases(),
-            fn (self $case): bool => str_contains($case->name, '_AUDIO_')
+            fn (self $case): bool => self::hasModelType($case, 'AUDIO')
                 && ($provider === null || str_starts_with($case->name, self::providerPrefix($provider)))
         ));
     }
@@ -590,7 +602,7 @@ enum ProviderModel: string
     {
         return array_values(array_filter(
             self::cases(),
-            fn (self $case): bool => str_contains($case->name, '_VIDEO_')
+            fn (self $case): bool => self::hasModelType($case, 'VIDEO')
                 && ($provider === null || str_starts_with($case->name, self::providerPrefix($provider)))
         ));
     }
@@ -604,7 +616,7 @@ enum ProviderModel: string
     {
         return array_values(array_filter(
             self::cases(),
-            fn (self $case): bool => str_contains($case->name, '_EMBEDDING_')
+            fn (self $case): bool => self::hasModelType($case, 'EMBEDDING')
                 && ($provider === null || str_starts_with($case->name, self::providerPrefix($provider)))
         ));
     }
@@ -618,8 +630,105 @@ enum ProviderModel: string
     {
         return array_values(array_filter(
             self::cases(),
-            fn (self $case): bool => str_contains($case->name, '_MODERATION_')
+            fn (self $case): bool => self::hasModelType($case, 'MODERATION')
                 && ($provider === null || str_starts_with($case->name, self::providerPrefix($provider)))
         ));
+    }
+
+    /**
+     * Get text models formatted for Vuetify select/autocomplete components.
+     * Returns an array of provider groups with models and enabled status.
+     *
+     * @return array<int, array{provider: string, providerLabel: string, enabled: bool, models: array<int, array{value: string, label: string}>}>
+     */
+    public static function toVuetifyOptions(): array
+    {
+        $groups = [];
+
+        foreach (Provider::cases() as $provider) {
+            $textModels = self::textModels($provider);
+
+            if (empty($textModels)) {
+                continue;
+            }
+
+            $groups[] = [
+                'provider' => $provider->value,
+                'providerLabel' => self::getProviderLabel($provider),
+                'enabled' => self::isProviderEnabled($provider),
+                'models' => array_map(fn (self $model) => [
+                    'value' => $model->value,
+                    'label' => $model->getLabel(),
+                ], $textModels),
+            ];
+        }
+
+        return $groups;
+    }
+
+    /**
+     * Get a human-readable label for a provider.
+     */
+    public static function getProviderLabel(Provider $provider): string
+    {
+        return match ($provider) {
+            Provider::OpenAI => 'OpenAI',
+            Provider::Anthropic => 'Anthropic',
+            Provider::Gemini => 'Google Gemini',
+            Provider::Mistral => 'Mistral AI',
+            Provider::Ollama => 'Ollama (Local)',
+            Provider::Groq => 'Groq',
+            Provider::DeepSeek => 'DeepSeek',
+            Provider::XAI => 'xAI (Grok)',
+            Provider::VoyageAI => 'Voyage AI',
+            Provider::ElevenLabs => 'ElevenLabs',
+            Provider::OpenRouter => 'OpenRouter',
+        };
+    }
+
+    /**
+     * Check if a provider is enabled (has API key configured).
+     */
+    public static function isProviderEnabled(Provider $provider): bool
+    {
+        $configKey = match ($provider) {
+            Provider::OpenAI => 'prism.providers.openai.api_key',
+            Provider::Anthropic => 'prism.providers.anthropic.api_key',
+            Provider::Gemini => 'prism.providers.gemini.api_key',
+            Provider::Mistral => 'prism.providers.mistral.api_key',
+            Provider::Ollama => 'prism.providers.ollama.url',
+            Provider::Groq => 'prism.providers.groq.api_key',
+            Provider::DeepSeek => 'prism.providers.deepseek.api_key',
+            Provider::XAI => 'prism.providers.xai.api_key',
+            Provider::VoyageAI => 'prism.providers.voyageai.api_key',
+            Provider::ElevenLabs => 'prism.providers.elevenlabs.api_key',
+            Provider::OpenRouter => 'prism.providers.openrouter.api_key',
+        };
+
+        $value = config($configKey);
+
+        return $value !== null && $value !== '';
+    }
+
+    /**
+     * Get a human-readable label for this model.
+     */
+    public function getLabel(): string
+    {
+        $parts = explode('_', $this->name);
+
+        // Remove provider and type prefixes (e.g., OPENAI_TEXT_)
+        array_shift($parts);
+        array_shift($parts);
+
+        $label = implode(' ', array_map(
+            fn (string $part) => ucfirst(strtolower($part)),
+            $parts
+        ));
+
+        // Convert version numbers like "4 5" to "4.5"
+        $label = preg_replace('/(\d)\s+(\d)/', '$1.$2', $label ?: $this->value);
+
+        return $label ?: $this->value;
     }
 }

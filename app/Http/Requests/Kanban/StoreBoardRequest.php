@@ -21,6 +21,8 @@ class StoreBoardRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:65535'],
+            'project_name' => ['nullable', 'string', 'max:255'],
+            'copy_columns_from_board_id' => ['nullable', 'integer', 'exists:kanban_boards,id'],
         ];
     }
 }

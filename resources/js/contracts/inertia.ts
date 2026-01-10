@@ -2,6 +2,7 @@ import { User } from "@js/types/models";
 // import { usePage } from "@inertiajs/vue3";
 import { PageProps } from "@inertiajs/core";
 import {ServerFlashMessage} from "@js/contracts/session-flash-messages";
+import type { ProviderModelGroup } from "@js/types/chat";
 // import { get } from "lodash";
 
 /** Keep AppPageProps in sync with HandleInertiaRequests.php */
@@ -9,12 +10,17 @@ export interface AppPageProps extends PageProps {
     appName: string;
     stripePublicKey: string;
     csrfToken: string;
-    "auth.user": User|null;
-    "flash.success": ServerFlashMessage;
-    "flash.error": ServerFlashMessage;
-    "flash.info": ServerFlashMessage;
-    passwordResetToken: string|null;
-    passwordResetEmail: string|null;
+    auth: {
+        user: User | null;
+    };
+    flash: {
+        success: ServerFlashMessage;
+        error: ServerFlashMessage;
+        info: ServerFlashMessage;
+    };
+    passwordResetToken: string | null;
+    passwordResetEmail: string | null;
+    aiModels: ProviderModelGroup[];
 }
 
 // export function getAppProp<K extends keyof AppPageProps>(prop: K): AppPageProps[K] {

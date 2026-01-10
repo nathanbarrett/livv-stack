@@ -1,16 +1,44 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { KanbanTask } from '@js/types/kanban'
+import { useMarkdown } from '@js/composables/useMarkdown'
 
 interface Props {
   task: KanbanTask
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   click: [task: KanbanTask]
   delete: [task: KanbanTask]
 }>()
+
+const { renderMarkdown } = useMarkdown()
+
+const descriptionPreview = computed(() => {
+  if (!props.task.description) return ''
+  const truncated =
+    props.task.description.length > 100
+      ? props.task.description.substring(0, 100) + '...'
+      : props.task.description
+  return renderMarkdown(truncated)
+})
+
+const dependencyCount = computed(() => props.task.dependencies?.length || 0)
+
+const priorityColor = computed(() => {
+  switch (props.task.priority) {
+    case 'high':
+      return 'error'
+    case 'medium':
+      return 'warning'
+    case 'low':
+      return 'success'
+    default:
+      return null
+  }
+})
 
 function getPriorityColor(priority: string | null | undefined): string {
   switch (priority) {
@@ -33,15 +61,16 @@ function formatDate(dateString: string | null | undefined): string {
 </script>
 
 <template>
-  <v-card
-    class="kanban-task mb-2"
-    variant="outlined"
-    @click="emit('click', task)"
-  >
+  <v-card class="kanban-task mb-2" variant="outlined" @click="emit('click', task)">
     <v-card-text class="pa-3">
       <div class="d-flex justify-space-between align-start">
-        <div class="task-title font-weight-medium">
-          {{ task.title }}
+        <div class="d-flex align-center ga-2 flex-wrap">
+          <v-chip size="x-small" variant="tonal" :color="priorityColor ?? 'grey'">
+            #{{ task.id }}
+          </v-chip>
+          <div class="task-title font-weight-medium" :class="priorityColor ? `text-${priorityColor}` : ''">
+            {{ task.title }}
+          </div>
         </div>
         <v-btn
           icon="mdi-delete-outline"
@@ -54,12 +83,11 @@ function formatDate(dateString: string | null | undefined): string {
 
       <div
         v-if="task.description"
-        class="task-description text-body-2 text-medium-emphasis mt-1"
-      >
-        {{ task.description.length > 80 ? task.description.substring(0, 80) + '...' : task.description }}
-      </div>
+        class="task-description text-body-2 text-medium-emphasis mt-2"
+        v-html="descriptionPreview"
+      />
 
-      <div class="d-flex align-center mt-2 ga-2">
+      <div class="d-flex align-center mt-2 ga-2 flex-wrap">
         <v-chip
           v-if="task.priority"
           :color="getPriorityColor(task.priority)"
@@ -76,6 +104,15 @@ function formatDate(dateString: string | null | undefined): string {
           prepend-icon="mdi-calendar"
         >
           {{ formatDate(task.due_date) }}
+        </v-chip>
+
+        <v-chip
+          v-if="dependencyCount > 0"
+          size="x-small"
+          variant="outlined"
+          prepend-icon="mdi-link-variant"
+        >
+          {{ dependencyCount }} dep{{ dependencyCount > 1 ? 's' : '' }}
         </v-chip>
       </div>
     </v-card-text>
@@ -99,5 +136,15 @@ function formatDate(dateString: string | null | undefined): string {
 
 .task-description {
   word-break: break-word;
+}
+
+.task-description :deep(p) {
+  margin: 0;
+}
+
+.task-description :deep(ul),
+.task-description :deep(ol) {
+  margin: 0;
+  padding-left: 1rem;
 }
 </style>

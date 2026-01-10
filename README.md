@@ -25,6 +25,26 @@ LIVV is designed to be a starting point for building web applications with a mod
 - Laravel Pint for formatting: `sail composer format`
 - ESLint for formatting and best practices: `npm run lint:fix`
 - GitHub Action to run Pest tests, check back end code formatting, check front end code formatting, and analyze code on push to main or PR to main
+- [Laravel Spy](https://github.com/farayaz/laravel-spy) for logging outgoing HTTP requests. View logs in the `http_logs` table or via the dashboard at `/spy`
+
+## Demo Applications
+
+LIVV Stack includes full-featured demo applications to showcase the framework's capabilities:
+
+### AI Chat (`/demo/ai-chat`)
+A complete AI-powered chat application demonstrating:
+- **Multi-provider support**: OpenAI, Anthropic, xAI (Grok), and more via [Laravel Prism](https://prism.echolabs.dev/)
+- **File attachments**: Upload and reference files in conversations
+- **AI Memory System**: Persistent memory that allows AI to remember user information across sessions
+- **Session management**: Create, switch between, and delete chat sessions
+- **Real-time streaming**: Streamed AI responses for better UX
+
+### Kanban Board (`/demo/kanban`)
+A drag-and-drop project management board featuring:
+- **Multiple boards**: Create and manage separate project boards
+- **Column management**: Add, rename, reorder, and delete columns
+- **Task management**: Create tasks with descriptions, drag between columns
+- **Real-time updates**: Optimistic UI updates with backend persistence
 
 ## Installation
 

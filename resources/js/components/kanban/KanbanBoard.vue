@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import draggable from 'vuedraggable'
-import type { KanbanBoard, KanbanColumn } from '@js/types/kanban'
+import type { KanbanBoard, KanbanColumn, KanbanTask } from '@js/types/kanban'
 import KanbanColumnComponent from '@js/components/kanban/KanbanColumn.vue'
 import KanbanColumnDialog from '@js/components/kanban/KanbanColumnDialog.vue'
+import { useKanbanBroadcast } from '@js/composables/useKanbanBroadcast'
 import axios from '@js/common/axios'
 import { error as showError, success as showSuccess } from '@js/common/snackbar'
 
@@ -20,6 +21,15 @@ const error = ref<string | null>(null)
 
 const showColumnDialog = ref(false)
 const editingColumn = ref<KanbanColumn | null>(null)
+
+// Convert boardId prop to a ref for the broadcast composable
+const boardIdRef = computed(() => props.boardId)
+
+// Subscribe to real-time updates
+const { leave: leaveBroadcast } = useKanbanBroadcast(boardIdRef, () => {
+  // On any board update, refetch the entire board to stay in sync
+  fetchBoard()
+})
 
 async function fetchBoard(): Promise<void> {
   loading.value = true
@@ -88,8 +98,26 @@ async function handleColumnDragEnd(event: { oldIndex: number; newIndex: number }
   }
 }
 
+interface TaskMovedFromDialogEvent {
+  task: KanbanTask
+  fromColumnId: number
+  toColumnId: number
+}
+
+function handleTaskMovedFromDialog(event: TaskMovedFromDialogEvent): void {
+  // Find the target column and add the task to the top
+  const targetColumn = columns.value.find(c => c.id === event.toColumnId)
+  if (targetColumn && targetColumn.tasks) {
+    targetColumn.tasks.unshift(event.task)
+  }
+}
+
 onMounted(() => {
   fetchBoard()
+})
+
+onUnmounted(() => {
+  leaveBroadcast()
 })
 </script>
 
@@ -153,9 +181,11 @@ onMounted(() => {
               :key="element.id"
               :column="element"
               :board-id="boardId"
+              :columns="columns"
               @update="openEditColumnDialog"
               @delete="handleDeleteColumn"
               @refresh="fetchBoard"
+              @task-moved-from-dialog="handleTaskMovedFromDialog"
             />
           </template>
         </draggable>

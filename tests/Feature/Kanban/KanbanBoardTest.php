@@ -16,7 +16,7 @@ describe('Kanban Boards', function () {
         KanbanBoard::factory()->count(2)->create(['user_id' => $user->id]);
         KanbanBoard::factory()->create();
 
-        $response = $this->actingAs($user)->getJson(route('kanban.boards.index'));
+        $response = $this->actingAs($user)->getJson(route('api.kanban.boards.index'));
 
         $response->assertOk();
 
@@ -28,7 +28,7 @@ describe('Kanban Boards', function () {
         $userB = User::factory()->create();
         KanbanBoard::factory()->create(['user_id' => $userA->id]);
 
-        $response = $this->actingAs($userB)->getJson(route('kanban.boards.index'));
+        $response = $this->actingAs($userB)->getJson(route('api.kanban.boards.index'));
 
         $response->assertOk();
 
@@ -38,7 +38,7 @@ describe('Kanban Boards', function () {
     test('user can create a board', function () {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->postJson(route('kanban.boards.store'), [
+        $response = $this->actingAs($user)->postJson(route('api.kanban.boards.store'), [
             'name' => 'My Project Board',
             'description' => 'A board for tracking my project',
         ]);
@@ -57,7 +57,7 @@ describe('Kanban Boards', function () {
     test('board creation requires name', function () {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->postJson(route('kanban.boards.store'), [
+        $response = $this->actingAs($user)->postJson(route('api.kanban.boards.store'), [
             'description' => 'A board without a name',
         ]);
 
@@ -72,7 +72,7 @@ describe('Kanban Boards', function () {
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
         KanbanTask::factory()->create(['kanban_column_id' => $column->id]);
 
-        $response = $this->actingAs($user)->getJson(route('kanban.boards.show', $board));
+        $response = $this->actingAs($user)->getJson(route('api.kanban.boards.show', $board));
 
         $response->assertOk();
 
@@ -86,7 +86,7 @@ describe('Kanban Boards', function () {
         $userB = User::factory()->create();
         $board = KanbanBoard::factory()->create(['user_id' => $userA->id]);
 
-        $response = $this->actingAs($userB)->getJson(route('kanban.boards.show', $board));
+        $response = $this->actingAs($userB)->getJson(route('api.kanban.boards.show', $board));
 
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     });
@@ -95,7 +95,7 @@ describe('Kanban Boards', function () {
         $user = User::factory()->create();
         $board = KanbanBoard::factory()->create(['user_id' => $user->id, 'name' => 'Old Name']);
 
-        $response = $this->actingAs($user)->patchJson(route('kanban.boards.update', $board), [
+        $response = $this->actingAs($user)->patchJson(route('api.kanban.boards.update', $board), [
             'name' => 'New Name',
         ]);
 
@@ -114,7 +114,7 @@ describe('Kanban Boards', function () {
         $userB = User::factory()->create();
         $board = KanbanBoard::factory()->create(['user_id' => $userA->id]);
 
-        $response = $this->actingAs($userB)->patchJson(route('kanban.boards.update', $board), [
+        $response = $this->actingAs($userB)->patchJson(route('api.kanban.boards.update', $board), [
             'name' => 'Hacked Name',
         ]);
 
@@ -125,7 +125,7 @@ describe('Kanban Boards', function () {
         $user = User::factory()->create();
         $board = KanbanBoard::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->actingAs($user)->deleteJson(route('kanban.boards.destroy', $board));
+        $response = $this->actingAs($user)->deleteJson(route('api.kanban.boards.destroy', $board));
 
         $response->assertStatus(Response::HTTP_NO_CONTENT);
 
@@ -138,7 +138,7 @@ describe('Kanban Boards', function () {
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
         $task = KanbanTask::factory()->create(['kanban_column_id' => $column->id]);
 
-        $response = $this->actingAs($user)->deleteJson(route('kanban.boards.destroy', $board));
+        $response = $this->actingAs($user)->deleteJson(route('api.kanban.boards.destroy', $board));
 
         $response->assertStatus(Response::HTTP_NO_CONTENT);
 
@@ -148,7 +148,7 @@ describe('Kanban Boards', function () {
     });
 
     test('unauthenticated user cannot access boards', function () {
-        $response = $this->getJson(route('kanban.boards.index'));
+        $response = $this->getJson(route('api.kanban.boards.index'));
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     });

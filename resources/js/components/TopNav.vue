@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useTheme } from "vuetify";
-import { User } from "@js/types/models";
 import { usePage, router } from "@inertiajs/vue3";
+import type { AppPageProps } from "@js/contracts/inertia";
 
 const theme = useTheme();
-const user = computed<User|null>(() => usePage().props.auth.user);
-const appName = computed<string>(() => usePage().props.appName as string);
+const page = usePage<AppPageProps>();
+const user = computed(() => page.props.auth.user);
+const appName = computed(() => page.props.appName);
 const isDarkTheme = computed<boolean>(() => theme.global.name.value === "LivvDarkTheme");
 
 function toggleTheme(): void {

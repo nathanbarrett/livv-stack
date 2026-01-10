@@ -41,6 +41,10 @@ Route::get('/demo/kanban', function () {
     return Inertia::render('KanbanDemo');
 })->name('kanban.demo');
 
+Route::get('/demo/ai-chat', function () {
+    return Inertia::render('Demo/AiChat');
+})->name('ai-chat.demo');
+
 Route::prefix('api')
     ->name('api.')
     ->group(base_path('routes/api.php'));

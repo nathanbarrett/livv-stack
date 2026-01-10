@@ -8,6 +8,8 @@ use App\Enums\KanbanTaskPriority;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class KanbanTask extends Model
 {
@@ -33,5 +35,48 @@ class KanbanTask extends Model
     public function column(): BelongsTo
     {
         return $this->belongsTo(KanbanColumn::class, 'kanban_column_id');
+    }
+
+    /**
+     * Tasks that this task depends on (blockers).
+     *
+     * @return BelongsToMany<KanbanTask, $this>
+     */
+    public function dependencies(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            KanbanTask::class,
+            'kanban_task_dependencies',
+            'task_id',
+            'depends_on_task_id'
+        )->withTimestamps();
+    }
+
+    /**
+     * Tasks that depend on this task.
+     *
+     * @return BelongsToMany<KanbanTask, $this>
+     */
+    public function dependents(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            KanbanTask::class,
+            'kanban_task_dependencies',
+            'depends_on_task_id',
+            'task_id'
+        )->withTimestamps();
+    }
+
+    public function getBoard(): KanbanBoard
+    {
+        return $this->column->board;
+    }
+
+    /**
+     * @return HasMany<KanbanTaskNote, $this>
+     */
+    public function notes(): HasMany
+    {
+        return $this->hasMany(KanbanTaskNote::class);
     }
 }

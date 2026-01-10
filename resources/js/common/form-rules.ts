@@ -1,30 +1,25 @@
-
 import isEmail from "validator/es/lib/isEmail";
 
-
 export type ValidationResult = string | boolean;
-export type ValidationRule = ValidationResult | PromiseLike<ValidationResult> | ((value: FormInput) => ValidationResult) | ((value: FormInput) => PromiseLike<ValidationResult>);
-export type ValidationRuleGenerator = (value?: string|number|null|undefined) => ValidationRule;
-export type FormRule = ValidationRule | ValidationRuleGenerator;
 export type FormInput = string | number | null | undefined;
+export type ValidationRule = (value: FormInput) => ValidationResult;
 export type EqualsInput = FormInput | (() => FormInput);
 
-export interface FormRules {
-    [key: string]: ValidationRuleGenerator;
-}
-
 export const formRules = {
-    required: (msg?: string) => {
+    required: (msg?: string): ValidationRule => {
         return (value: FormInput) => {
             return !!value || msg || 'Required';
         }
     },
-    email: (msg?: string) => {
+    email: (msg?: string): ValidationRule => {
         return (value: FormInput) => {
+            if (value === null || value === undefined) {
+                return msg || 'Invalid email';
+            }
             return isEmail(value.toString()) || msg || 'Invalid email';
         }
     },
-    min: (min: number) => {
+    min: (min: number): ValidationRule => {
         return (value: FormInput) => {
             if (typeof value === 'string') {
                 return value.length >= min || `Must be at least ${min} characters`
@@ -35,7 +30,7 @@ export const formRules = {
             return true;
         }
     },
-    max: (max: number) => {
+    max: (max: number): ValidationRule => {
         return (value: FormInput) => {
             if (typeof value === 'string') {
                 return value.length <= max || `Must be at most ${max} characters`
@@ -46,10 +41,10 @@ export const formRules = {
             return true;
         }
     },
-    equals: (other: EqualsInput, msg?: string) => {
+    equals: (other: EqualsInput, msg?: string): ValidationRule => {
         return (value: FormInput) => {
             const otherValue = typeof other === 'function' ? other() : other;
             return value === otherValue || msg || `Must be equal to ${otherValue}`
         }
     }
-} satisfies FormRules;
+};

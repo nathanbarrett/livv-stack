@@ -6,12 +6,15 @@ IMPORTANT GENERAL NOTES:
 - for any `sail ...` commands given, if they don't work because sail is not recognized, prefix them with `./vendor/bin/` i.e. `./vendor/bin/sail ...`
 - Always assume that `npm run dev` is already running somewhere
 - For a general overview of how this app works see `docs/app/INDEX.md`
-- If you intend to interface with AI services adhere to the following: 
-  - services always default to using the Laravel Prism library unless specifically told not to use it, read `docs/prism/INDEX.md` for more info. 
+- If you intend to interface with AI services adhere to the following:
+  - services always default to using the Laravel Prism library unless specifically told not to use it, read `docs/prism/INDEX.md` for more info.
   - For any AI provider you use, always check AI provider specific documentation in Prism docs to see if there are any special instructions for that provider.
   - Prompts classes are stored in `app/AI/Prompts/`
   - AI Prism tools are stored in `app/AI/Tools/`
   - use dynamic context mcp for additional context
+
+# Troubleshooting
+- All outgoing HTTP requests made by the backend (via Laravel's HTTP client) are logged in the `http_logs` table. Use this for troubleshooting API calls, debugging external service integrations, and inspecting request/response payloads. The dashboard is available at `/spy` when authenticated.
 
 <!-- DYNAMIC CONTEXT MCP GUIDELINES START -->
 

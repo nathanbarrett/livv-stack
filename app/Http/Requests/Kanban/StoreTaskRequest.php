@@ -23,8 +23,11 @@ class StoreTaskRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:65535'],
+            'implementation_plans' => ['nullable', 'string', 'max:16777215'],
             'due_date' => ['nullable', 'date'],
             'priority' => ['nullable', Rule::enum(KanbanTaskPriority::class)],
+            'dependency_ids' => ['nullable', 'array'],
+            'dependency_ids.*' => ['integer', 'exists:kanban_tasks,id'],
         ];
     }
 }

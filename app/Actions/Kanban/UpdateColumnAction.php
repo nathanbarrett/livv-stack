@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Kanban;
 
+use App\Events\Kanban\KanbanBoardUpdated;
 use App\Models\KanbanColumn;
 
 class UpdateColumnAction
@@ -14,7 +15,10 @@ class UpdateColumnAction
     public function handle(KanbanColumn $column, array $data): KanbanColumn
     {
         $column->update($data);
+        $column = $column->fresh();
 
-        return $column->fresh();
+        KanbanBoardUpdated::dispatch($column->board, 'updated', 'column', $column->id);
+
+        return $column;
     }
 }

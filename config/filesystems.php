@@ -55,6 +55,13 @@ return [
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
         ],
+
+        'chat_attachments' => [
+            'driver' => 'local',
+            'root' => storage_path('app/chat-attachments'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
     ],
 
     /*

@@ -14,15 +14,18 @@ const error = ref<string>('');
 const passwordReset = ref<boolean>(false);
 
 const formReady = computed<boolean>(() => {
-    return resetPasswordToken.value &&
+    return Boolean(
+        resetPasswordToken.value &&
+        resetPasswordEmail.value &&
         isEmail(resetPasswordEmail.value) &&
         newPassword.value &&
         newPassword.value.length >= 8 &&
         newPasswordConfirmation.value &&
         newPassword.value === newPasswordConfirmation.value
+    );
 });
 onMounted(() => {
-    if (resetPasswordToken.value && isEmail(resetPasswordEmail.value)) {
+    if (resetPasswordToken.value && resetPasswordEmail.value && isEmail(resetPasswordEmail.value)) {
         openDialog.value = true;
     }
 });

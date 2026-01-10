@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import draggable from 'vuedraggable'
-import type { KanbanColumn, KanbanTask } from '@js/types/kanban'
+import type { KanbanColumn, KanbanTask, KanbanTaskNote } from '@js/types/kanban'
 import KanbanTaskCard from '@js/components/kanban/KanbanTask.vue'
 import KanbanTaskDialog from '@js/components/kanban/KanbanTaskDialog.vue'
 import axios from '@js/common/axios'
@@ -11,22 +11,30 @@ import { confirmDialog } from '@js/common/confirm'
 interface Props {
   column: KanbanColumn
   boardId: number
+  columns?: KanbanColumn[]
 }
 
 const props = defineProps<Props>()
 
-const emit = defineEmits<{
-  update: [column: KanbanColumn]
-  delete: [column: KanbanColumn]
-  taskMoved: [event: TaskMovedEvent]
-  refresh: []
-}>()
+interface TaskMovedFromDialogEvent {
+  task: KanbanTask
+  fromColumnId: number
+  toColumnId: number
+}
 
 interface TaskMovedEvent {
   taskId: number
   targetColumnId: number
   position: number
 }
+
+const emit = defineEmits<{
+  update: [column: KanbanColumn]
+  delete: [column: KanbanColumn]
+  taskMoved: [event: TaskMovedEvent]
+  taskMovedFromDialog: [event: TaskMovedFromDialogEvent]
+  refresh: []
+}>()
 
 const tasks = ref<KanbanTask[]>(props.column.tasks || [])
 const showTaskDialog = ref(false)
@@ -52,6 +60,20 @@ function handleTaskSaved(savedTask: KanbanTask): void {
   } else {
     tasks.value.push(savedTask)
   }
+}
+
+function handleNotesChanged(taskId: number, notes: KanbanTaskNote[]): void {
+  const task = tasks.value.find(t => t.id === taskId)
+  if (task) {
+    task.notes = notes
+  }
+}
+
+function handleTaskMoved(event: TaskMovedFromDialogEvent): void {
+  // Remove task from this column
+  tasks.value = tasks.value.filter(t => t.id !== event.task.id)
+  // Emit event so parent (KanbanBoard) can add task to target column
+  emit('taskMovedFromDialog', event)
 }
 
 async function handleDeleteTask(task: KanbanTask): Promise<void> {
@@ -185,7 +207,11 @@ defineExpose({
       v-model="showTaskDialog"
       :task="editingTask"
       :column-id="column.id"
+      :board-id="boardId"
+      :columns="columns"
       @save="handleTaskSaved"
+      @notes-changed="handleNotesChanged"
+      @task-moved="handleTaskMoved"
     />
   </div>
 </template>

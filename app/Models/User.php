@@ -61,4 +61,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(KanbanBoard::class);
     }
+
+    /**
+     * @return HasMany<AiChatSession, $this>
+     */
+    public function chatSessions(): HasMany
+    {
+        return $this->hasMany(AiChatSession::class)->orderByDesc('updated_at');
+    }
+
+    /**
+     * @return HasMany<UserMemory, $this>
+     */
+    public function memories(): HasMany
+    {
+        return $this->hasMany(UserMemory::class);
+    }
 }

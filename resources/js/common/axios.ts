@@ -9,19 +9,21 @@ const axios: AxiosInstance = _axios.create();
 function resolveCsrfToken(): Promise<string> {
     return new Promise((resolve, reject) => {
         const metaEl = document.querySelector('meta[name="csrf-token"]');
+        const content = metaEl?.getAttribute('content');
 
-        if (metaEl) {
-            return resolve(metaEl.getAttribute('content'));
+        if (content) {
+            return resolve(content);
         }
 
         const start = Date.now();
         const maxWait = 3000;
         const intervalToken = setInterval(() => {
-            const token = document.querySelector('meta[name="csrf-token"]');
+            const tokenEl = document.querySelector('meta[name="csrf-token"]');
+            const tokenContent = tokenEl?.getAttribute('content');
 
-            if (token) {
+            if (tokenContent) {
                 clearInterval(intervalToken);
-                return resolve(token.getAttribute('content'));
+                return resolve(tokenContent);
             }
 
             if (Date.now() - start > maxWait) {
@@ -32,7 +34,7 @@ function resolveCsrfToken(): Promise<string> {
     });
 }
 
-async function requestInterceptor(config: InternalAxiosRequestConfig<never>): Promise<InternalAxiosRequestConfig<never>> {
+async function requestInterceptor(config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
     config.headers['X-CSRF-TOKEN'] = await resolveCsrfToken();
 

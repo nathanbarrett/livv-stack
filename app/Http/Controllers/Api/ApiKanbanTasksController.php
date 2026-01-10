@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Actions\Kanban\CreateTaskAction;
 use App\Actions\Kanban\DeleteTaskAction;
 use App\Actions\Kanban\MoveTaskAction;
+use App\Actions\Kanban\SyncTaskDependenciesAction;
 use App\Actions\Kanban\UpdateTaskAction;
 use App\Enums\KanbanTaskPriority;
 use App\Http\Controllers\Controller;
@@ -21,6 +22,10 @@ use Illuminate\Http\Response;
 
 class ApiKanbanTasksController extends Controller
 {
+    public function __construct(
+        private SyncTaskDependenciesAction $syncDependenciesAction,
+    ) {}
+
     public function store(StoreTaskRequest $request, KanbanColumn $column, CreateTaskAction $action): JsonResponse
     {
         $this->authorize('update', $column->board);
@@ -37,9 +42,16 @@ class ApiKanbanTasksController extends Controller
             column: $column,
             title: $request->input('title'),
             description: $request->input('description'),
+            implementationPlans: $request->input('implementation_plans'),
             dueDate: $dueDate,
             priority: $priority,
         );
+
+        if ($request->has('dependency_ids')) {
+            $this->syncDependenciesAction->handle($task, $request->input('dependency_ids', []));
+        }
+
+        $task->load(['dependencies:id,title,kanban_column_id', 'notes']);
 
         return response()->json(['task' => $task], Response::HTTP_CREATED);
     }
@@ -48,7 +60,16 @@ class ApiKanbanTasksController extends Controller
     {
         $this->authorize('update', $task->column->board);
 
-        $task = $action->handle($task, $request->validated());
+        $validated = $request->validated();
+        unset($validated['dependency_ids']);
+
+        $task = $action->handle($task, $validated);
+
+        if ($request->has('dependency_ids')) {
+            $this->syncDependenciesAction->handle($task, $request->input('dependency_ids', []));
+        }
+
+        $task->load(['dependencies:id,title,kanban_column_id', 'notes']);
 
         return response()->json(['task' => $task]);
     }

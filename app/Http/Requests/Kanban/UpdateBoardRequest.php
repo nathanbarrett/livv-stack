@@ -21,6 +21,7 @@ class UpdateBoardRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:65535'],
+            'project_name' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

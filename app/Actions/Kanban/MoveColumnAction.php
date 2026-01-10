@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Kanban;
 
+use App\Events\Kanban\KanbanBoardUpdated;
 use App\Models\KanbanColumn;
 use Illuminate\Support\Facades\DB;
 
@@ -34,6 +35,10 @@ class MoveColumnAction
             $column->update(['position' => $newPosition]);
         });
 
-        return $column->fresh();
+        $column = $column->fresh();
+
+        KanbanBoardUpdated::dispatch($column->board, 'moved', 'column', $column->id);
+
+        return $column;
     }
 }

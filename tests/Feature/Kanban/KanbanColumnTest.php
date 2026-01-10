@@ -15,7 +15,7 @@ describe('Kanban Columns', function () {
         $user = User::factory()->create();
         $board = KanbanBoard::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->actingAs($user)->postJson(route('kanban.columns.store', $board), [
+        $response = $this->actingAs($user)->postJson(route('api.kanban.columns.store', $board), [
             'name' => 'To Do',
             'color' => '#ff0000',
         ]);
@@ -37,7 +37,7 @@ describe('Kanban Columns', function () {
         $userB = User::factory()->create();
         $board = KanbanBoard::factory()->create(['user_id' => $userA->id]);
 
-        $response = $this->actingAs($userB)->postJson(route('kanban.columns.store', $board), [
+        $response = $this->actingAs($userB)->postJson(route('api.kanban.columns.store', $board), [
             'name' => 'Hacked Column',
         ]);
 
@@ -48,7 +48,7 @@ describe('Kanban Columns', function () {
         $user = User::factory()->create();
         $board = KanbanBoard::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->actingAs($user)->postJson(route('kanban.columns.store', $board), [
+        $response = $this->actingAs($user)->postJson(route('api.kanban.columns.store', $board), [
             'color' => '#ff0000',
         ]);
 
@@ -63,7 +63,7 @@ describe('Kanban Columns', function () {
         KanbanColumn::factory()->create(['kanban_board_id' => $board->id, 'position' => 0]);
         KanbanColumn::factory()->create(['kanban_board_id' => $board->id, 'position' => 1]);
 
-        $response = $this->actingAs($user)->postJson(route('kanban.columns.store', $board), [
+        $response = $this->actingAs($user)->postJson(route('api.kanban.columns.store', $board), [
             'name' => 'New Column',
         ]);
 
@@ -77,7 +77,7 @@ describe('Kanban Columns', function () {
         $board = KanbanBoard::factory()->create(['user_id' => $user->id]);
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id, 'name' => 'Old Name']);
 
-        $response = $this->actingAs($user)->patchJson(route('kanban.columns.update', $column), [
+        $response = $this->actingAs($user)->patchJson(route('api.kanban.columns.update', $column), [
             'name' => 'New Name',
             'color' => '#00ff00',
         ]);
@@ -94,7 +94,7 @@ describe('Kanban Columns', function () {
         $board = KanbanBoard::factory()->create(['user_id' => $userA->id]);
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
 
-        $response = $this->actingAs($userB)->patchJson(route('kanban.columns.update', $column), [
+        $response = $this->actingAs($userB)->patchJson(route('api.kanban.columns.update', $column), [
             'name' => 'Hacked Name',
         ]);
 
@@ -106,7 +106,7 @@ describe('Kanban Columns', function () {
         $board = KanbanBoard::factory()->create(['user_id' => $user->id]);
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
 
-        $response = $this->actingAs($user)->deleteJson(route('kanban.columns.destroy', $column));
+        $response = $this->actingAs($user)->deleteJson(route('api.kanban.columns.destroy', $column));
 
         $response->assertStatus(Response::HTTP_NO_CONTENT);
 
@@ -119,7 +119,7 @@ describe('Kanban Columns', function () {
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
         $task = KanbanTask::factory()->create(['kanban_column_id' => $column->id]);
 
-        $response = $this->actingAs($user)->deleteJson(route('kanban.columns.destroy', $column));
+        $response = $this->actingAs($user)->deleteJson(route('api.kanban.columns.destroy', $column));
 
         $response->assertStatus(Response::HTTP_NO_CONTENT);
 
@@ -134,7 +134,7 @@ describe('Kanban Columns', function () {
         $column2 = KanbanColumn::factory()->create(['kanban_board_id' => $board->id, 'position' => 1, 'name' => 'Second']);
         $column3 = KanbanColumn::factory()->create(['kanban_board_id' => $board->id, 'position' => 2, 'name' => 'Third']);
 
-        $response = $this->actingAs($user)->patchJson(route('kanban.columns.move', $column3), [
+        $response = $this->actingAs($user)->patchJson(route('api.kanban.columns.move', $column3), [
             'position' => 0,
         ]);
 
@@ -154,7 +154,7 @@ describe('Kanban Columns', function () {
         $column2 = KanbanColumn::factory()->create(['kanban_board_id' => $board->id, 'position' => 1]);
         $column3 = KanbanColumn::factory()->create(['kanban_board_id' => $board->id, 'position' => 2]);
 
-        $response = $this->actingAs($user)->patchJson(route('kanban.columns.move', $column1), [
+        $response = $this->actingAs($user)->patchJson(route('api.kanban.columns.move', $column1), [
             'position' => 2,
         ]);
 

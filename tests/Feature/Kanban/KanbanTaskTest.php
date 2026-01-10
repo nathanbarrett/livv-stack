@@ -17,7 +17,7 @@ describe('Kanban Tasks', function () {
         $board = KanbanBoard::factory()->create(['user_id' => $user->id]);
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
 
-        $response = $this->actingAs($user)->postJson(route('kanban.tasks.store', $column), [
+        $response = $this->actingAs($user)->postJson(route('api.kanban.tasks.store', $column), [
             'title' => 'My First Task',
             'description' => 'Task description',
             'priority' => 'high',
@@ -42,7 +42,7 @@ describe('Kanban Tasks', function () {
         $board = KanbanBoard::factory()->create(['user_id' => $userA->id]);
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
 
-        $response = $this->actingAs($userB)->postJson(route('kanban.tasks.store', $column), [
+        $response = $this->actingAs($userB)->postJson(route('api.kanban.tasks.store', $column), [
             'title' => 'Hacked Task',
         ]);
 
@@ -54,7 +54,7 @@ describe('Kanban Tasks', function () {
         $board = KanbanBoard::factory()->create(['user_id' => $user->id]);
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
 
-        $response = $this->actingAs($user)->postJson(route('kanban.tasks.store', $column), [
+        $response = $this->actingAs($user)->postJson(route('api.kanban.tasks.store', $column), [
             'description' => 'Task without title',
         ]);
 
@@ -68,7 +68,7 @@ describe('Kanban Tasks', function () {
         $board = KanbanBoard::factory()->create(['user_id' => $user->id]);
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
 
-        $response = $this->actingAs($user)->postJson(route('kanban.tasks.store', $column), [
+        $response = $this->actingAs($user)->postJson(route('api.kanban.tasks.store', $column), [
             'title' => 'High Priority Task',
             'priority' => 'high',
         ]);
@@ -85,7 +85,7 @@ describe('Kanban Tasks', function () {
         $board = KanbanBoard::factory()->create(['user_id' => $user->id]);
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
 
-        $response = $this->actingAs($user)->postJson(route('kanban.tasks.store', $column), [
+        $response = $this->actingAs($user)->postJson(route('api.kanban.tasks.store', $column), [
             'title' => 'Task with Invalid Priority',
             'priority' => 'invalid',
         ]);
@@ -102,7 +102,7 @@ describe('Kanban Tasks', function () {
         KanbanTask::factory()->create(['kanban_column_id' => $column->id, 'position' => 0]);
         KanbanTask::factory()->create(['kanban_column_id' => $column->id, 'position' => 1]);
 
-        $response = $this->actingAs($user)->postJson(route('kanban.tasks.store', $column), [
+        $response = $this->actingAs($user)->postJson(route('api.kanban.tasks.store', $column), [
             'title' => 'New Task',
         ]);
 
@@ -117,7 +117,7 @@ describe('Kanban Tasks', function () {
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
         $task = KanbanTask::factory()->create(['kanban_column_id' => $column->id, 'title' => 'Old Title']);
 
-        $response = $this->actingAs($user)->patchJson(route('kanban.tasks.update', $task), [
+        $response = $this->actingAs($user)->patchJson(route('api.kanban.tasks.update', $task), [
             'title' => 'New Title',
             'priority' => 'medium',
         ]);
@@ -135,7 +135,7 @@ describe('Kanban Tasks', function () {
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
         $task = KanbanTask::factory()->create(['kanban_column_id' => $column->id]);
 
-        $response = $this->actingAs($userB)->patchJson(route('kanban.tasks.update', $task), [
+        $response = $this->actingAs($userB)->patchJson(route('api.kanban.tasks.update', $task), [
             'title' => 'Hacked Title',
         ]);
 
@@ -148,7 +148,7 @@ describe('Kanban Tasks', function () {
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
         $task = KanbanTask::factory()->create(['kanban_column_id' => $column->id]);
 
-        $response = $this->actingAs($user)->deleteJson(route('kanban.tasks.destroy', $task));
+        $response = $this->actingAs($user)->deleteJson(route('api.kanban.tasks.destroy', $task));
 
         $response->assertStatus(Response::HTTP_NO_CONTENT);
 
@@ -163,7 +163,7 @@ describe('Kanban Tasks', function () {
         $task2 = KanbanTask::factory()->create(['kanban_column_id' => $column->id, 'position' => 1]);
         $task3 = KanbanTask::factory()->create(['kanban_column_id' => $column->id, 'position' => 2]);
 
-        $response = $this->actingAs($user)->patchJson(route('kanban.tasks.move', $task3), [
+        $response = $this->actingAs($user)->patchJson(route('api.kanban.tasks.move', $task3), [
             'kanban_column_id' => $column->id,
             'position' => 0,
         ]);
@@ -182,7 +182,7 @@ describe('Kanban Tasks', function () {
         $column2 = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
         $task = KanbanTask::factory()->create(['kanban_column_id' => $column1->id, 'position' => 0]);
 
-        $response = $this->actingAs($user)->patchJson(route('kanban.tasks.move', $task), [
+        $response = $this->actingAs($user)->patchJson(route('api.kanban.tasks.move', $task), [
             'kanban_column_id' => $column2->id,
             'position' => 0,
         ]);
@@ -205,7 +205,7 @@ describe('Kanban Tasks', function () {
         $task3 = KanbanTask::factory()->create(['kanban_column_id' => $column2->id, 'position' => 0]);
         $task4 = KanbanTask::factory()->create(['kanban_column_id' => $column2->id, 'position' => 1]);
 
-        $response = $this->actingAs($user)->patchJson(route('kanban.tasks.move', $task1), [
+        $response = $this->actingAs($user)->patchJson(route('api.kanban.tasks.move', $task1), [
             'kanban_column_id' => $column2->id,
             'position' => 1,
         ]);
@@ -230,7 +230,7 @@ describe('Kanban Tasks', function () {
         $columnB = KanbanColumn::factory()->create(['kanban_board_id' => $boardB->id]);
         $task = KanbanTask::factory()->create(['kanban_column_id' => $columnA->id]);
 
-        $response = $this->actingAs($userA)->patchJson(route('kanban.tasks.move', $task), [
+        $response = $this->actingAs($userA)->patchJson(route('api.kanban.tasks.move', $task), [
             'kanban_column_id' => $columnB->id,
             'position' => 0,
         ]);

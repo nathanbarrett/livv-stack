@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\AI\Enums\ProviderModel;
 use App\Enums\FlashLocation;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -55,6 +56,8 @@ class HandleInertiaRequests extends Middleware
             'auth.user' => fn () => $request->user()
                 ? $request->user()->toArray()
                 : null,
+
+            'aiModels' => fn () => ProviderModel::toVuetifyOptions(),
         ]);
     }
 }

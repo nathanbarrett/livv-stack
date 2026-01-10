@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Kanban;
 
+use App\Events\Kanban\KanbanBoardUpdated;
 use App\Models\KanbanBoard;
 use App\Models\KanbanColumn;
 
@@ -13,10 +14,14 @@ class CreateColumnAction
     {
         $maxPosition = $board->columns()->max('position') ?? -1;
 
-        return $board->columns()->create([
+        $column = $board->columns()->create([
             'name' => $name,
             'color' => $color,
             'position' => $maxPosition + 1,
         ]);
+
+        KanbanBoardUpdated::dispatch($board, 'created', 'column', $column->id);
+
+        return $column;
     }
 }

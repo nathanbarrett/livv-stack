@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Kanban;
 
+use App\Events\Kanban\KanbanBoardUpdated;
 use App\Models\KanbanBoard;
 
 class UpdateBoardAction
@@ -14,7 +15,10 @@ class UpdateBoardAction
     public function handle(KanbanBoard $board, array $data): KanbanBoard
     {
         $board->update($data);
+        $board = $board->fresh();
 
-        return $board->fresh();
+        KanbanBoardUpdated::dispatch($board, 'updated', 'board', $board->id);
+
+        return $board;
     }
 }

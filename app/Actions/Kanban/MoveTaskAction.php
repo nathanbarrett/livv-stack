@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Kanban;
 
+use App\Events\Kanban\KanbanBoardUpdated;
 use App\Models\KanbanTask;
 use Illuminate\Support\Facades\DB;
 
@@ -52,6 +53,10 @@ class MoveTaskAction
             ]);
         });
 
-        return $task->fresh();
+        $task = $task->fresh();
+
+        KanbanBoardUpdated::dispatch($task->column->board, 'moved', 'task', $task->id);
+
+        return $task;
     }
 }

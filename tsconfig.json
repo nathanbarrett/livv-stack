@@ -1,10 +1,16 @@
 {
     "compilerOptions": {
-        "lib": ["es2016", "dom"],
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "skipLibCheck": true,
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
         "esModuleInterop": true,
         "baseUrl": ".",
         "paths": {
             "@js/*": ["resources/js/*"]
         }
-    }
+    },
+    "include": ["resources/js/**/*.ts", "resources/js/**/*.vue"]
 }
