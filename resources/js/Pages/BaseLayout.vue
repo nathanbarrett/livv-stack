@@ -6,6 +6,7 @@ import ResetPasswordDialog from "@js/components/ResetPasswordDialog.vue";
 import SessionFlashMessages from "@js/components/SessionFlashMessages.vue";
 import GlobalSnackbar from "@js/components/GlobalSnackbar.vue";
 import GlobalConfirm from "@js/components/GlobalConfirm.vue";
+import VoiceAssistantDialog from "@js/components/VoiceAssistantDialog.vue";
 
 const appName = computed<string>(() => usePage().props.appName as string);
 const csrfToken = computed<string>(() => usePage().props.csrfToken as string);
@@ -31,6 +32,7 @@ rel="icon" href="/favicon.png"
         <SessionFlashMessages />
         <GlobalSnackbar />
         <GlobalConfirm />
+        <VoiceAssistantDialog />
     </v-app>
 </template>
 

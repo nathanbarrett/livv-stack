@@ -4,21 +4,26 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Actions\Auth\CreatePasswordResetTokenAction;
+use App\Actions\Auth\CreateUserAction;
+use App\Actions\Auth\GetEmailVerificationTokenAction;
+use App\Actions\Auth\GetUserFromPasswordResetTokenAction;
 use App\Exceptions\AuthException;
 use App\Mail\ForgotPassword;
 use App\Mail\VerifyEmail;
 use App\Models\User;
-use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class AuthService
 {
-    public function __construct(private readonly UserRepository $users)
-    {
-        //
-    }
+    public function __construct(
+        private readonly CreateUserAction $createUser,
+        private readonly GetEmailVerificationTokenAction $getEmailVerificationToken,
+        private readonly CreatePasswordResetTokenAction $createPasswordResetToken,
+        private readonly GetUserFromPasswordResetTokenAction $getUserFromPasswordResetToken
+    ) {}
 
     public function login(string $email, string $password, bool $remember = false): ?User
     {
@@ -47,11 +52,7 @@ class AuthService
     public function register(string $name, string $email, string $password): ?User
     {
         try {
-            $user = User::create([
-                'name' => $name,
-                'email' => $email,
-                'password' => bcrypt($password),
-            ]);
+            $user = $this->createUser->handle($name, $email, $password);
         } catch (\Exception $e) {
             throw AuthException::newUserCreationException($email, $e);
         }
@@ -61,7 +62,7 @@ class AuthService
 
         if (
             config('auth.email_verification.enabled') &&
-            $token = $this->users->getEmailVerificationToken($user)
+            $token = $this->getEmailVerificationToken->handle($user)
         ) {
             Mail::to($user)->send(new VerifyEmail($token));
         }
@@ -116,7 +117,7 @@ class AuthService
             return false;
         }
 
-        $token = $this->users->createPasswordResetToken($user);
+        $token = $this->createPasswordResetToken->handle($user);
 
         Mail::to($user)->send(new ForgotPassword($token));
 
@@ -125,12 +126,12 @@ class AuthService
 
     public function validatePasswordResetToken(string $token): ?User
     {
-        return $this->users->getUserFromPasswordResetToken($token);
+        return $this->getUserFromPasswordResetToken->handle($token);
     }
 
     public function updatePassword(string $token, string $email, string $password): ?User
     {
-        $user = $this->users->getUserFromPasswordResetToken($token);
+        $user = $this->getUserFromPasswordResetToken->handle($token);
 
         if (! $user || $user->email !== $email) {
             return null;

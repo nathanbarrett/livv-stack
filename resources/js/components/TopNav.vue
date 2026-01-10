@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { useTheme } from "vuetify";
 import { usePage, router } from "@inertiajs/vue3";
 import type { AppPageProps } from "@js/contracts/inertia";
+import { openVoiceAssistant } from "@js/common/voiceAssistant";
 
 const theme = useTheme();
 const page = usePage<AppPageProps>();
@@ -55,6 +56,14 @@ function toggleTheme(): void {
     >
       Login
     </v-btn>
+    <v-btn
+      v-if="user"
+      icon="mdi-microphone"
+      variant="text"
+      size="small"
+      title="Voice Assistant"
+      @click="openVoiceAssistant()"
+    />
     <v-btn
       v-if="user"
       variant="plain"

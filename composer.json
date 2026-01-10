@@ -11,7 +11,6 @@
         "laravel/framework": "^v12.3.0",
         "laravel/reverb": "^1.0",
         "laravel/tinker": "^v2.10.1",
-        "nathanbarrett/laravel-repositories": "^1.2.0",
         "prism-php/prism": "^0.99.11"
     },
     "require-dev": {

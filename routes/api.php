@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\ApiKanbanBoardsController;
 use App\Http\Controllers\Api\ApiKanbanColumnsController;
 use App\Http\Controllers\Api\ApiKanbanTaskNotesController;
 use App\Http\Controllers\Api\ApiKanbanTasksController;
+use App\Http\Controllers\Api\ApiRealtimeFunctionController;
+use App\Http\Controllers\Api\ApiRealtimeTokenController;
 use App\Http\Controllers\Api\ApiUserMemoriesController;
 use Illuminate\Support\Facades\Route;
 
@@ -96,4 +98,9 @@ Route::prefix('chat')
             ->name('memories.update');
         Route::delete('/memories/{memory}', [ApiUserMemoriesController::class, 'destroy'])
             ->name('memories.destroy');
+
+        Route::post('/realtime/token', [ApiRealtimeTokenController::class, 'store'])
+            ->name('realtime.token');
+        Route::post('/realtime/functions', [ApiRealtimeFunctionController::class, 'execute'])
+            ->name('realtime.functions');
     });
