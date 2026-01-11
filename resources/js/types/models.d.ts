@@ -71,6 +71,7 @@ export interface KanbanTask {
   links?: Array<unknown> | null
   created_at?: string | null
   updated_at?: string | null
+  deleted_at?: string | null
   // relations
   column?: KanbanColumn
   dependencies?: KanbanTask[]
