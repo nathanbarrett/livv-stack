@@ -19,64 +19,130 @@ class RealtimeToolDefinitions
         return [
             'type' => 'function',
             'name' => 'manage_kanban',
-            'description' => 'Manage kanban boards, columns, and tasks. Use to view boards, list tasks, update tasks, move tasks between columns, view implementation plans, view/add notes, and delete tasks. Markdown is supported in description, implementation_plans, and notes fields.',
+            'description' => 'Full kanban management: boards, columns, tasks, links, dependencies, notes, and attachments. Markdown supported in descriptions, implementation_plans, and notes.',
             'parameters' => [
                 'type' => 'object',
                 'properties' => [
                     'action' => [
                         'type' => 'string',
                         'enum' => [
+                            // Board actions
                             'list_boards',
+                            'create_board',
+                            'update_board',
+                            'delete_board',
+                            // Column actions
                             'list_columns',
+                            'create_column',
+                            'update_column',
+                            'move_column',
+                            'delete_column',
+                            // Task actions
                             'list_tasks',
-                            'show_task_implementation_plan',
-                            'show_task_notes',
-                            'move_task',
-                            'add_task_note',
+                            'create_task',
                             'update_task',
+                            'move_task',
                             'delete_task',
+                            'show_task_implementation_plan',
+                            // Note actions
+                            'show_task_notes',
+                            'add_task_note',
+                            'update_task_note',
+                            'delete_task_note',
+                            // Link actions
+                            'add_task_link',
+                            'remove_task_link',
+                            // Dependency actions
+                            'add_task_dependency',
+                            'remove_task_dependency',
+                            // Attachment actions
+                            'list_task_attachments',
+                            'delete_task_attachment',
                         ],
                         'description' => 'The action to perform',
                     ],
+                    // Board parameters
                     'board_id' => [
                         'type' => 'number',
-                        'description' => 'Board ID (required for: list_columns, list_tasks)',
+                        'description' => 'Board ID (for: list_columns, list_tasks, update_board, delete_board, create_column)',
                     ],
+                    'name' => [
+                        'type' => 'string',
+                        'description' => 'Name (for: create_board, update_board, create_column, update_column)',
+                    ],
+                    'project_name' => [
+                        'type' => 'string',
+                        'description' => 'Project name (for: create_board, update_board)',
+                    ],
+                    // Column parameters
                     'column_id' => [
                         'type' => 'number',
-                        'description' => 'Column ID (required for: list_tasks; destination for: move_task)',
+                        'description' => 'Column ID (for: list_tasks, create_task, update_column, move_column, delete_column, move_task)',
                     ],
+                    'color' => [
+                        'type' => 'string',
+                        'description' => 'Hex color code (for: create_column, update_column)',
+                    ],
+                    // Task parameters
                     'task_id' => [
                         'type' => 'number',
-                        'description' => 'Task ID (required for: show_task_*, move_task, add_task_note, update_task, delete_task)',
-                    ],
-                    'position' => [
-                        'type' => 'number',
-                        'description' => 'Position in column (optional for: move_task, defaults to end)',
-                    ],
-                    'note' => [
-                        'type' => 'string',
-                        'description' => 'Note content, markdown supported (required for: add_task_note)',
+                        'description' => 'Task ID (for: task operations, notes, links, dependencies)',
                     ],
                     'title' => [
                         'type' => 'string',
-                        'description' => 'Task title (for: update_task)',
+                        'description' => 'Task title (for: create_task, update_task)',
                     ],
                     'description' => [
                         'type' => 'string',
-                        'description' => 'Task description, markdown supported (for: update_task)',
+                        'description' => 'Description, markdown supported (for: create_board, update_board, create_task, update_task, create_column, update_column)',
                     ],
                     'implementation_plans' => [
                         'type' => 'string',
-                        'description' => 'Implementation plans, markdown supported (for: update_task)',
+                        'description' => 'Implementation plans, markdown supported (for: create_task, update_task)',
                     ],
                     'due_date' => [
                         'type' => 'string',
-                        'description' => 'Due date YYYY-MM-DD format (for: update_task, use "clear" to remove)',
+                        'description' => 'Due date YYYY-MM-DD (for: create_task, update_task, "clear" to remove)',
                     ],
                     'priority' => [
                         'type' => 'string',
-                        'description' => 'Priority: low, medium, high, or "clear" to remove (for: update_task)',
+                        'description' => 'Priority: low, medium, high, or "clear" to remove',
+                    ],
+                    'position' => [
+                        'type' => 'number',
+                        'description' => 'Position (for: move_task, move_column, create_task)',
+                    ],
+                    // Note parameters
+                    'note_id' => [
+                        'type' => 'number',
+                        'description' => 'Note ID (for: update_task_note, delete_task_note)',
+                    ],
+                    'note' => [
+                        'type' => 'string',
+                        'description' => 'Note content, markdown supported (for: add_task_note, update_task_note)',
+                    ],
+                    // Link parameters
+                    'url' => [
+                        'type' => 'string',
+                        'description' => 'URL (for: add_task_link)',
+                    ],
+                    'label' => [
+                        'type' => 'string',
+                        'description' => 'Link label (for: add_task_link)',
+                    ],
+                    'link_index' => [
+                        'type' => 'number',
+                        'description' => 'Link index 0-based (for: remove_task_link)',
+                    ],
+                    // Dependency parameters
+                    'depends_on_task_id' => [
+                        'type' => 'number',
+                        'description' => 'Dependency task ID (for: add_task_dependency, remove_task_dependency)',
+                    ],
+                    // Attachment parameters
+                    'attachment_id' => [
+                        'type' => 'number',
+                        'description' => 'Attachment ID (for: delete_task_attachment)',
                     ],
                 ],
                 'required' => ['action'],
