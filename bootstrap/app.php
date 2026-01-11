@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\EnsureEnvironment;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 HandleInertiaRequests::class,
             ]
         );
+        $middleware->alias([
+            'env' => EnsureEnvironment::class,
+        ]);
         $middleware->redirectGuestsTo(fn (Request $request) => route('home'));
     })
     ->withExceptions(function (Exceptions $exceptions) {

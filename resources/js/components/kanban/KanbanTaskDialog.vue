@@ -4,12 +4,14 @@ import { useDisplay } from 'vuetify'
 import type {
   KanbanTask,
   KanbanTaskNote,
+  KanbanTaskAttachment,
   KanbanTaskDependency,
   KanbanColumn,
   CreateTaskRequest,
   UpdateTaskRequest,
   BoardTasksResponse,
   TaskNotesResponse,
+  AttachmentsResponse,
 } from '@js/types/kanban'
 import { useMarkdown } from '@js/composables/useMarkdown'
 import KanbanTaskNotes from '@js/components/kanban/KanbanTaskNotes.vue'
@@ -17,7 +19,7 @@ import axios from '@js/common/axios'
 import { error as showError, success as showSuccess } from '@js/common/snackbar'
 
 type TaskPriority = 'low' | 'medium' | 'high'
-type ContentTab = 'description' | 'plans' | 'notes'
+type ContentTab = 'description' | 'plans' | 'notes' | 'attachments'
 
 interface Props {
   modelValue: boolean
@@ -60,6 +62,13 @@ const activeTab = ref<ContentTab>('description')
 const isPreviewMode = ref(false)
 const showDatePicker = ref(false)
 const selectedColumnId = ref<number | null>(null)
+const links = ref<string[]>([])
+const newLinkInput = ref('')
+const localAttachments = ref<KanbanTaskAttachment[]>([])
+const loadingAttachments = ref(false)
+const uploadingAttachment = ref(false)
+const fileInputRef = ref<HTMLInputElement | null>(null)
+const thumbnailUrls = ref<Record<number, string>>({})
 
 // Helper to convert Date to ISO string for API
 function formatDateForApi(date: Date | null): string | undefined {
@@ -119,6 +128,7 @@ const renderedContent = computed(() => {
 })
 
 const isNotesTab = computed(() => activeTab.value === 'notes')
+const isAttachmentsTab = computed(() => activeTab.value === 'attachments')
 
 watch(
   () => props.modelValue,
@@ -133,7 +143,12 @@ watch(
         dueDate.value = parseDateFromApi(props.task.due_date)
         priority.value = props.task.priority || null
         selectedDependencyIds.value = props.task.dependencies?.map((d) => d.id) || []
-        await Promise.all([loadAvailableTasks(), fetchNotes(props.task.id)])
+        links.value = props.task.links ? [...props.task.links] : []
+        await Promise.all([
+          loadAvailableTasks(),
+          fetchNotes(props.task.id),
+          fetchAttachments(props.task.id),
+        ])
       } else {
         resetForm()
         await loadAvailableTasks()
@@ -151,6 +166,10 @@ function resetForm(): void {
   priority.value = null
   selectedDependencyIds.value = []
   selectedColumnId.value = null
+  links.value = []
+  newLinkInput.value = ''
+  localAttachments.value = []
+  thumbnailUrls.value = {}
   activeTab.value = 'description'
   isPreviewMode.value = false
   showDatePicker.value = false
@@ -191,6 +210,107 @@ async function fetchNotes(taskId: number): Promise<void> {
   }
 }
 
+async function fetchAttachments(taskId: number): Promise<void> {
+  loadingAttachments.value = true
+  try {
+    const response = await axios.get<AttachmentsResponse>(
+      `/api/kanban/tasks/${taskId}/attachments`
+    )
+    localAttachments.value = response.data.attachments
+  } catch (err) {
+    console.error('Failed to load attachments', err)
+    localAttachments.value = []
+  } finally {
+    loadingAttachments.value = false
+  }
+}
+
+async function uploadAttachment(event: Event): Promise<void> {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+
+  if (!file || !props.task) {
+    return
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    showError('File must be less than 10MB')
+    return
+  }
+
+  if (localAttachments.value.length >= 10) {
+    showError('Maximum 10 attachments per task')
+    return
+  }
+
+  uploadingAttachment.value = true
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const response = await axios.post(
+      `/api/kanban/tasks/${props.task.id}/attachments`,
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } }
+    )
+    localAttachments.value.push(response.data.attachment)
+    showSuccess('Attachment uploaded')
+  } catch (err) {
+    showError('Failed to upload attachment')
+    console.error(err)
+  } finally {
+    uploadingAttachment.value = false
+    input.value = ''
+  }
+}
+
+async function deleteAttachment(attachmentId: number): Promise<void> {
+  try {
+    await axios.delete(`/api/kanban/attachments/${attachmentId}`)
+    localAttachments.value = localAttachments.value.filter((a) => a.id !== attachmentId)
+    delete thumbnailUrls.value[attachmentId]
+    showSuccess('Attachment deleted')
+  } catch (err) {
+    showError('Failed to delete attachment')
+    console.error(err)
+  }
+}
+
+async function viewAttachment(attachment: KanbanTaskAttachment): Promise<void> {
+  try {
+    const response = await axios.get(`/api/kanban/attachments/${attachment.id}`)
+    window.open(response.data.attachment.url, '_blank')
+  } catch (err) {
+    showError('Failed to get attachment URL')
+    console.error(err)
+  }
+}
+
+async function loadThumbnailUrl(attachment: KanbanTaskAttachment): Promise<void> {
+  if (thumbnailUrls.value[attachment.id]) {
+    return
+  }
+
+  try {
+    const response = await axios.get(`/api/kanban/attachments/${attachment.id}`)
+    thumbnailUrls.value[attachment.id] = response.data.attachment.url
+  } catch (err) {
+    console.error('Failed to load thumbnail', err)
+  }
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) {
+    return `${bytes} B`
+  }
+
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} KB`
+  }
+
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
 function updateCurrentTabContent(value: string): void {
   switch (activeTab.value) {
     case 'description':
@@ -216,6 +336,35 @@ function handleNoteDeleted(noteId: number): void {
   }
 }
 
+function addLink(): void {
+  const url = newLinkInput.value.trim()
+  if (!url) return
+
+  try {
+    new URL(url)
+    if (!links.value.includes(url)) {
+      links.value.push(url)
+    }
+    newLinkInput.value = ''
+  } catch {
+    showError('Please enter a valid URL')
+  }
+}
+
+function removeLink(index: number): void {
+  links.value.splice(index, 1)
+}
+
+function truncateUrl(url: string): string {
+  try {
+    const parsed = new URL(url)
+    const display = parsed.hostname + (parsed.pathname !== '/' ? parsed.pathname : '')
+    return display.length > 40 ? display.substring(0, 40) + '...' : display
+  } catch {
+    return url.length > 40 ? url.substring(0, 40) + '...' : url
+  }
+}
+
 async function save(): Promise<void> {
   if (!title.value.trim()) {
     showError('Title is required')
@@ -233,6 +382,7 @@ async function save(): Promise<void> {
         due_date: formatDateForApi(dueDate.value) ?? null,
         priority: priority.value,
         dependency_ids: selectedDependencyIds.value,
+        links: links.value.length > 0 ? links.value : null,
       }
 
       const response = await axios.patch(`/api/kanban/tasks/${props.task.id}`, payload)
@@ -263,6 +413,7 @@ async function save(): Promise<void> {
         due_date: formatDateForApi(dueDate.value),
         priority: priority.value || undefined,
         dependency_ids: selectedDependencyIds.value,
+        links: links.value.length > 0 ? links.value : undefined,
       }
 
       const response = await axios.post(`/api/kanban/columns/${props.columnId}/tasks`, payload)
@@ -311,10 +462,11 @@ async function save(): Promise<void> {
             <v-tab value="description">Description</v-tab>
             <v-tab value="plans">Implementation Plans</v-tab>
             <v-tab value="notes">Notes</v-tab>
+            <v-tab value="attachments">Attachments</v-tab>
           </v-tabs>
 
           <v-btn-toggle
-            v-if="!isNotesTab"
+            v-if="!isNotesTab && !isAttachmentsTab"
             v-model="isPreviewMode"
             mandatory
             density="compact"
@@ -339,6 +491,95 @@ async function save(): Promise<void> {
             />
             <v-alert v-else type="info" variant="tonal">
               Save the task first to add notes.
+            </v-alert>
+          </template>
+          <template v-else-if="isAttachmentsTab">
+            <div v-if="loadingAttachments" class="d-flex justify-center align-center py-8">
+              <v-progress-circular indeterminate color="primary" />
+            </div>
+            <div v-else-if="task">
+              <input
+                ref="fileInputRef"
+                type="file"
+                hidden
+                @change="uploadAttachment"
+              />
+              <v-btn
+                color="primary"
+                variant="tonal"
+                :loading="uploadingAttachment"
+                :disabled="localAttachments.length >= 10"
+                class="mb-4"
+                @click="fileInputRef?.click()"
+              >
+                <v-icon start>mdi-upload</v-icon>
+                Upload File
+              </v-btn>
+              <div class="text-caption text-medium-emphasis mb-4">
+                {{ localAttachments.length }}/10 files (max 10MB each)
+              </div>
+
+              <v-list v-if="localAttachments.length > 0">
+                <v-list-item
+                  v-for="attachment in localAttachments"
+                  :key="attachment.id"
+                  class="px-0"
+                >
+                  <template #prepend>
+                    <v-avatar
+                      v-if="attachment.mime_type.startsWith('image/')"
+                      rounded
+                      size="48"
+                      class="mr-3"
+                    >
+                      <v-img
+                        v-if="thumbnailUrls[attachment.id]"
+                        :src="thumbnailUrls[attachment.id]"
+                      />
+                      <v-icon v-else @vue:mounted="loadThumbnailUrl(attachment)">
+                        mdi-image
+                      </v-icon>
+                    </v-avatar>
+                    <v-avatar
+                      v-else-if="attachment.mime_type.startsWith('video/')"
+                      rounded
+                      size="48"
+                      color="grey-darken-3"
+                      class="mr-3"
+                    >
+                      <v-icon>mdi-video</v-icon>
+                    </v-avatar>
+                    <v-avatar v-else rounded size="48" color="grey-darken-3" class="mr-3">
+                      <v-icon>mdi-file</v-icon>
+                    </v-avatar>
+                  </template>
+
+                  <v-list-item-title>{{ attachment.original_filename }}</v-list-item-title>
+                  <v-list-item-subtitle>{{ formatFileSize(attachment.size) }}</v-list-item-subtitle>
+
+                  <template #append>
+                    <v-btn
+                      icon="mdi-eye"
+                      variant="text"
+                      size="small"
+                      @click="viewAttachment(attachment)"
+                    />
+                    <v-btn
+                      icon="mdi-delete"
+                      variant="text"
+                      size="small"
+                      color="error"
+                      @click="deleteAttachment(attachment.id)"
+                    />
+                  </template>
+                </v-list-item>
+              </v-list>
+              <v-alert v-else type="info" variant="tonal">
+                No attachments yet
+              </v-alert>
+            </div>
+            <v-alert v-else type="info" variant="tonal">
+              Save the task first to add attachments.
             </v-alert>
           </template>
           <template v-else>
@@ -449,6 +690,44 @@ async function save(): Promise<void> {
             </v-list-item>
           </template>
         </v-autocomplete>
+
+        <div class="mt-4">
+          <div class="text-subtitle-2 mb-2">Links</div>
+
+          <div class="d-flex ga-2 mb-2">
+            <v-text-field
+              v-model="newLinkInput"
+              label="Add URL"
+              variant="outlined"
+              density="compact"
+              placeholder="https://..."
+              hide-details
+              @keyup.enter="addLink"
+            />
+            <v-btn icon="mdi-plus" variant="tonal" @click="addLink" />
+          </div>
+
+          <v-chip-group v-if="links.length > 0" column>
+            <v-chip
+              v-for="(link, index) in links"
+              :key="index"
+              closable
+              @click:close="removeLink(index)"
+            >
+              <a
+                v-if="isPreviewMode"
+                :href="link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-decoration-none"
+                @click.stop
+              >
+                {{ truncateUrl(link) }}
+              </a>
+              <span v-else>{{ truncateUrl(link) }}</span>
+            </v-chip>
+          </v-chip-group>
+        </div>
       </v-card-text>
 
       <v-card-actions>

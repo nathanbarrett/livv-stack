@@ -6,7 +6,7 @@ namespace App\Http\Requests\Kanban;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreColumnRequest extends FormRequest
+class StoreTaskAttachmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -19,9 +19,7 @@ class StoreColumnRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'color' => ['nullable', 'string', 'max:7'],
-            'description' => ['nullable', 'string', 'max:65535'],
+            'file' => ['required', 'file', 'max:10240'],
         ];
     }
 }

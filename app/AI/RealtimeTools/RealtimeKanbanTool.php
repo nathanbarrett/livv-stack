@@ -20,7 +20,7 @@ use Illuminate\Support\Str;
 class RealtimeKanbanTool
 {
     /**
-     * @param array<string, mixed> $args
+     * @param  array<string, mixed>  $args
      */
     public function execute(User $user, array $args): string
     {
@@ -61,7 +61,7 @@ class RealtimeKanbanTool
             $lines[] = "  Columns: {$board->columns_count} | Tasks: {$taskCount}";
 
             if ($board->description) {
-                $lines[] = '  Description: ' . Str::limit($board->description, 100);
+                $lines[] = '  Description: '.Str::limit($board->description, 100);
             }
 
             $lines[] = '';
@@ -140,7 +140,7 @@ class RealtimeKanbanTool
             $lines[] = "- Task #{$task->id}: {$task->title}{$priorityInfo}{$dueDateInfo}";
 
             if ($task->description) {
-                $lines[] = '  Description: ' . Str::limit($task->description, 150);
+                $lines[] = '  Description: '.Str::limit($task->description, 150);
             }
 
             if ($task->dependencies->isNotEmpty()) {
@@ -267,7 +267,7 @@ class RealtimeKanbanTool
     }
 
     /**
-     * @param array<string, mixed> $args
+     * @param  array<string, mixed>  $args
      */
     private function updateTask(User $user, array $args): string
     {
@@ -343,7 +343,7 @@ class RealtimeKanbanTool
 
         app(UpdateTaskAction::class)->handle($task, $data);
 
-        return "Task #{$taskId} updated successfully. Changes: " . implode(', ', $changes) . '.';
+        return "Task #{$taskId} updated successfully. Changes: ".implode(', ', $changes).'.';
     }
 
     private function deleteTask(User $user, int|float|null $taskId): string

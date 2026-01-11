@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ApiAiChatModelsController;
 use App\Http\Controllers\Api\ApiAiChatSessionsController;
 use App\Http\Controllers\Api\ApiKanbanBoardsController;
 use App\Http\Controllers\Api\ApiKanbanColumnsController;
+use App\Http\Controllers\Api\ApiKanbanTaskAttachmentsController;
 use App\Http\Controllers\Api\ApiKanbanTaskNotesController;
 use App\Http\Controllers\Api\ApiKanbanTasksController;
 use App\Http\Controllers\Api\ApiRealtimeFunctionController;
@@ -58,6 +59,15 @@ Route::prefix('kanban')
             ->name('notes.update');
         Route::delete('/notes/{note}', [ApiKanbanTaskNotesController::class, 'destroy'])
             ->name('notes.destroy');
+
+        Route::get('/tasks/{task}/attachments', [ApiKanbanTaskAttachmentsController::class, 'index'])
+            ->name('attachments.index');
+        Route::post('/tasks/{task}/attachments', [ApiKanbanTaskAttachmentsController::class, 'store'])
+            ->name('attachments.store');
+        Route::get('/attachments/{attachment}', [ApiKanbanTaskAttachmentsController::class, 'show'])
+            ->name('attachments.show');
+        Route::delete('/attachments/{attachment}', [ApiKanbanTaskAttachmentsController::class, 'destroy'])
+            ->name('attachments.destroy');
     });
 
 Route::prefix('chat')

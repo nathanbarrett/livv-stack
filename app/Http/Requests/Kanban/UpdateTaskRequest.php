@@ -28,6 +28,8 @@ class UpdateTaskRequest extends FormRequest
             'priority' => ['nullable', Rule::enum(KanbanTaskPriority::class)],
             'dependency_ids' => ['nullable', 'array'],
             'dependency_ids.*' => ['integer', 'exists:kanban_tasks,id'],
+            'links' => ['nullable', 'array'],
+            'links.*' => ['string', 'url', 'max:2048'],
         ];
     }
 }

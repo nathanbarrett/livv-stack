@@ -23,6 +23,7 @@ const { smAndDown } = useDisplay()
 const loading = ref(false)
 const name = ref('')
 const color = ref<string | null>(null)
+const description = ref('')
 const showColorPicker = ref(false)
 
 const isEditMode = computed(() => !!props.column)
@@ -52,6 +53,7 @@ watch(
       if (props.column) {
         name.value = props.column.name
         color.value = props.column.color || null
+        description.value = props.column.description || ''
       } else {
         resetForm()
       }
@@ -62,6 +64,7 @@ watch(
 function resetForm(): void {
   name.value = ''
   color.value = null
+  description.value = ''
   showColorPicker.value = false
 }
 
@@ -87,6 +90,7 @@ async function save(): Promise<void> {
       const payload: UpdateColumnRequest = {
         name: name.value,
         color: color.value || undefined,
+        description: description.value || undefined,
       }
 
       const response = await axios.patch(`/api/kanban/columns/${props.column.id}`, payload)
@@ -96,6 +100,7 @@ async function save(): Promise<void> {
       const payload: CreateColumnRequest = {
         name: name.value,
         color: color.value || undefined,
+        description: description.value || undefined,
       }
 
       const response = await axios.post(`/api/kanban/boards/${props.boardId}/columns`, payload)
@@ -185,6 +190,16 @@ async function save(): Promise<void> {
             @click="clearColor"
           />
         </div>
+
+        <v-textarea
+          v-model="description"
+          label="Description"
+          variant="outlined"
+          density="comfortable"
+          rows="3"
+          auto-grow
+          class="mt-3"
+        />
       </v-card-text>
 
       <v-card-actions>

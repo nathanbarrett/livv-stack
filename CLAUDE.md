@@ -16,6 +16,14 @@ IMPORTANT GENERAL NOTES:
 # Troubleshooting
 - All outgoing HTTP requests made by the backend (via Laravel's HTTP client) are logged in the `http_logs` table. Use this for troubleshooting API calls, debugging external service integrations, and inspecting request/response payloads. The dashboard is available at `/spy` when authenticated.
 
+# AI Agent Authentication
+To quickly authenticate in local/staging environments:
+1. Query available users: `User::select('id', 'name', 'email')->get()` (via tinker or database query)
+2. Navigate to: `/ai/login/{user_id}` (e.g., `/ai/login/1`)
+3. You are now authenticated as that user
+
+This route only works in `local` and `staging` environments (enforced by `env:local,staging` middleware).
+
 <!-- DYNAMIC CONTEXT MCP GUIDELINES START -->
 
 <CRITICAL_INSTRUCTION>

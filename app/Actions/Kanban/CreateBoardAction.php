@@ -32,6 +32,7 @@ class CreateBoardAction
                     $board->columns()->create([
                         'name' => $column->name,
                         'color' => $column->color,
+                        'description' => $column->description,
                         'position' => $index,
                     ]);
                 }

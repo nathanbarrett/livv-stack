@@ -62,6 +62,13 @@ return [
             'visibility' => 'private',
             'throw' => false,
         ],
+
+        'kanban_attachments' => [
+            'driver' => 'local',
+            'root' => storage_path('app/kanban-attachments'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
     ],
 
     /*

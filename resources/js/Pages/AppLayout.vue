@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import TopNav from "@js/components/TopNav.vue";
+import SideNav from "@js/components/SideNav.vue";
 import BaseLayout from "@js/Pages/BaseLayout.vue";
-
 </script>
 
 <template>
     <BaseLayout>
-        <TopNav />
-        <div class="app-body">
+        <SideNav />
+        <v-main>
             <slot />
-        </div>
+        </v-main>
     </BaseLayout>
 </template>
 
 <style lang="css" scoped>
-.app-body {
-    margin-top: 64px;
-}
 </style>

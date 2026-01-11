@@ -27,6 +27,7 @@ class ApiKanbanColumnsController extends Controller
             board: $board,
             name: $request->input('name'),
             color: $request->input('color'),
+            description: $request->input('description'),
         );
 
         return response()->json(['column' => $column], Response::HTTP_CREATED);

@@ -13,7 +13,7 @@ use App\Models\User;
 class RealtimeMemoryTool
 {
     /**
-     * @param array<string, mixed> $args
+     * @param  array<string, mixed>  $args
      */
     public function execute(User $user, array $args): string
     {

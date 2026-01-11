@@ -13,6 +13,7 @@ export interface KanbanColumn {
   id: number
   kanban_board_id: number
   name: string
+  description?: string | null
   position: number
   color?: string | null
   tasks?: KanbanTask[]
@@ -37,6 +38,17 @@ export interface KanbanTaskNote {
   updated_at: string
 }
 
+export interface KanbanTaskAttachment {
+  id: number
+  kanban_task_id: number
+  original_filename: string
+  mime_type: string
+  size: number
+  url?: string
+  created_at?: string
+  updated_at?: string
+}
+
 export interface KanbanTask {
   id: number
   kanban_column_id: number
@@ -46,8 +58,10 @@ export interface KanbanTask {
   position: number
   due_date?: string | null
   priority?: 'low' | 'medium' | 'high' | null
+  links?: string[] | null
   dependencies?: KanbanTaskDependency[]
   notes?: KanbanTaskNote[]
+  attachments?: KanbanTaskAttachment[]
   created_at?: string | null
   updated_at?: string | null
 }
@@ -68,11 +82,13 @@ export interface UpdateBoardRequest {
 export interface CreateColumnRequest {
   name: string
   color?: string
+  description?: string
 }
 
 export interface UpdateColumnRequest {
   name?: string
   color?: string
+  description?: string
 }
 
 export interface MoveColumnRequest {
@@ -85,6 +101,7 @@ export interface CreateTaskRequest {
   implementation_plans?: string
   due_date?: string
   priority?: 'low' | 'medium' | 'high'
+  links?: string[]
   dependency_ids?: number[]
 }
 
@@ -94,6 +111,7 @@ export interface UpdateTaskRequest {
   implementation_plans?: string
   due_date?: string | null
   priority?: 'low' | 'medium' | 'high' | null
+  links?: string[] | null
   dependency_ids?: number[]
 }
 
@@ -145,4 +163,12 @@ export interface KanbanBoardEvent {
   entity_type: 'board' | 'column' | 'task'
   entity_id: number | null
   timestamp: string
+}
+
+export interface AttachmentResponse {
+  attachment: KanbanTaskAttachment
+}
+
+export interface AttachmentsResponse {
+  attachments: KanbanTaskAttachment[]
 }

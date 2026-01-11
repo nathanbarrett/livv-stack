@@ -68,6 +68,7 @@ export interface KanbanTask {
   position: number
   due_date?: string | null
   priority?: KanbanTaskPriority | null
+  links?: Array<unknown> | null
   created_at?: string | null
   updated_at?: string | null
   // relations
@@ -75,15 +76,18 @@ export interface KanbanTask {
   dependencies?: KanbanTask[]
   dependents?: KanbanTask[]
   notes?: KanbanTaskNote[]
+  attachments?: KanbanTaskAttachment[]
   // counts
   dependencies_count?: number
   dependents_count?: number
   notes_count?: number
+  attachments_count?: number
   // exists
   column_exists?: boolean
   dependencies_exists?: boolean
   dependents_exists?: boolean
   notes_exists?: boolean
+  attachments_exists?: boolean
 }
 
 export interface KanbanBoard {
@@ -103,6 +107,27 @@ export interface KanbanBoard {
   // exists
   user_exists?: boolean
   columns_exists?: boolean
+}
+
+export interface KanbanTaskAttachment {
+  // columns
+  id: number
+  kanban_task_id: number
+  filename: string
+  original_filename: string
+  mime_type: string
+  size: number
+  disk: string
+  path: string
+  created_at?: string | null
+  updated_at?: string | null
+  // mutators
+  url: string
+  // relations
+  task?: KanbanTask
+  // counts
+  // exists
+  task_exists?: boolean
 }
 
 export interface UserMemory {
@@ -173,6 +198,7 @@ export interface KanbanColumn {
   name: string
   position: number
   color?: string | null
+  description?: string | null
   created_at?: string | null
   updated_at?: string | null
   // relations

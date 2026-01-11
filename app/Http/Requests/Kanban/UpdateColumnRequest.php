@@ -21,6 +21,7 @@ class UpdateColumnRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'color' => ['nullable', 'string', 'max:7'],
+            'description' => ['nullable', 'string', 'max:65535'],
         ];
     }
 }

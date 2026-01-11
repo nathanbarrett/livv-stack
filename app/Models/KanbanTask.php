@@ -26,6 +26,7 @@ class KanbanTask extends Model
         return [
             'due_date' => 'date',
             'priority' => KanbanTaskPriority::class,
+            'links' => 'array',
         ];
     }
 
@@ -78,5 +79,13 @@ class KanbanTask extends Model
     public function notes(): HasMany
     {
         return $this->hasMany(KanbanTaskNote::class);
+    }
+
+    /**
+     * @return HasMany<KanbanTaskAttachment, $this>
+     */
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(KanbanTaskAttachment::class);
     }
 }

@@ -10,13 +10,18 @@ use App\Models\KanbanColumn;
 
 class CreateColumnAction
 {
-    public function handle(KanbanBoard $board, string $name, ?string $color = null): KanbanColumn
-    {
+    public function handle(
+        KanbanBoard $board,
+        string $name,
+        ?string $color = null,
+        ?string $description = null,
+    ): KanbanColumn {
         $maxPosition = $board->columns()->max('position') ?? -1;
 
         $column = $board->columns()->create([
             'name' => $name,
             'color' => $color,
+            'description' => $description,
             'position' => $maxPosition + 1,
         ]);
 
