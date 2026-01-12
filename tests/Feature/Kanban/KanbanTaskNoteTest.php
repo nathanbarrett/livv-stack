@@ -206,7 +206,7 @@ describe('Kanban Task Notes', function () {
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     });
 
-    test('notes are deleted when task is deleted', function () {
+    test('notes are preserved when task is soft deleted', function () {
         $user = User::factory()->create();
         $board = KanbanBoard::factory()->create(['user_id' => $user->id]);
         $column = KanbanColumn::factory()->create(['kanban_board_id' => $board->id]);
@@ -216,8 +216,9 @@ describe('Kanban Task Notes', function () {
 
         $this->actingAs($user)->deleteJson(route('api.kanban.tasks.destroy', $task));
 
-        $this->assertDatabaseMissing('kanban_task_notes', ['id' => $note1->id]);
-        $this->assertDatabaseMissing('kanban_task_notes', ['id' => $note2->id]);
+        $this->assertSoftDeleted('kanban_tasks', ['id' => $task->id]);
+        $this->assertDatabaseHas('kanban_task_notes', ['id' => $note1->id]);
+        $this->assertDatabaseHas('kanban_task_notes', ['id' => $note2->id]);
     });
 
     test('notes are included when fetching board', function () {

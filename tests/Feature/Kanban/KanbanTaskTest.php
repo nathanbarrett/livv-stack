@@ -152,7 +152,7 @@ describe('Kanban Tasks', function () {
 
         $response->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertDatabaseMissing('kanban_tasks', ['id' => $task->id]);
+        $this->assertSoftDeleted('kanban_tasks', ['id' => $task->id]);
     });
 
     test('user can move task within same column', function () {
